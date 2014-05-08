@@ -37,7 +37,7 @@ public class RecordDataSource {
     }
 
     public void addRecord(Record record){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.COLUMN_ID, record.id);
