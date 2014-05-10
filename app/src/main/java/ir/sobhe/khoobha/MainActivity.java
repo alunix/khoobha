@@ -1,6 +1,7 @@
 package ir.sobhe.khoobha;
 
 import android.app.*;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,32 @@ public class MainActivity extends android.app.Activity {
         dataSource = new ActivityDataSource(this);
         dataSource.open();
 
+
+        Button addActivityButton = (Button)findViewById(R.id.AddActivity);
+
+        addActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //go to adding new activity page
+                Intent addActivityIntent = new Intent(MainActivity.this, AddActivityActivity.class);
+                startActivity(addActivityIntent);
+            }
+        });
+
+        Button addChildButton = (Button)findViewById(R.id.AddChild);
+
+        addChildButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //go to adding new child page
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         List<Activity> activities = new ArrayList<Activity>();
 
         try{
@@ -44,28 +72,5 @@ public class MainActivity extends android.app.Activity {
                 //go to scoring page for selected activity
             }
         });
-
-        Button addActivityButton = (Button)findViewById(R.id.AddActivity);
-
-        addActivityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //go to adding new activity page
-            }
-        });
-
-        Button addChildButton = (Button)findViewById(R.id.AddChild);
-
-        addChildButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //go to adding new child page
-            }
-        });
-
     }
-
-
-
-
 }

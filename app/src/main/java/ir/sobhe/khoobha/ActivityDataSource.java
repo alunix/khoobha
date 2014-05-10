@@ -33,7 +33,8 @@ public class ActivityDataSource {
     public void addActivity(Activity activity){
         try{
             ContentValues values = new ContentValues();
-            values.put(DatabaseHelper.COLUMN_ID, activity.id);
+            if(activity.id != -1)
+                values.put(DatabaseHelper.COLUMN_ID, activity.id);
             values.put(DatabaseHelper.COLUMN_TITLE, activity.title);
             values.put(DatabaseHelper.COLUMN_POINTS, activity.points);
             database.insert(DatabaseHelper.TABLE_ACTIVITY, null, values);

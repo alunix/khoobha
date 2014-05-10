@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="ir.sobhe.khoobha.AddActivityActivity">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_title"
+        android:layout_marginTop="46dp"
+        android:layout_marginLeft="37dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/activityTitle" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="عنوان"
+        android:id="@+id/activityTitle"
+        android:layout_alignBottom="@+id/txt_title"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="34dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="امتیاز"
+        android:id="@+id/tv_points"
+        android:layout_below="@+id/txt_title"
+        android:layout_alignRight="@+id/activityTitle"
+        android:layout_alignEnd="@+id/activityTitle"
+        android:layout_marginTop="55dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/txt_points"
+        android:layout_alignBottom="@+id/tv_points"
+        android:layout_alignRight="@+id/txt_title"
+        android:layout_alignEnd="@+id/txt_title"
+        android:autoText="false"
+        android:clickable="false" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ذخیره"
+        android:id="@+id/btn_save"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/txt_title"
+        android:layout_alignStart="@+id/txt_title" />
+
+</RelativeLayout>
