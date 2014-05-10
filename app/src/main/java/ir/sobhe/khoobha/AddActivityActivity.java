@@ -20,7 +20,7 @@ public class AddActivityActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addactivity);
-        ((EditText)findViewById(R.id.txt_points)).setHint("1");
+        ((EditText)findViewById(R.id.txt_points)).setHint("1 ");
 
         dataSource = new ActivityDataSource(this);
 
