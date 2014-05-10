@@ -10,7 +10,7 @@ import android.content.Intent;
 public class SyncService extends IntentService {
 
     private int result = Activity.RESULT_CANCELED;
-    public static final String NOTIFICATION = "ir.sobhe.khoobha"
+    public static final String NOTIFICATION = "ir.sobhe.khoobha";
 
     public SyncService(){
         super("SyncService");

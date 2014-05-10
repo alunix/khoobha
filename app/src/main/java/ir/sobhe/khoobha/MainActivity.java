@@ -1,7 +1,10 @@
 package ir.sobhe.khoobha;
 
 import android.app.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,6 +22,18 @@ public class MainActivity extends android.app.Activity {
 
     private ActivityDataSource dataSource;
 
+    private BroadcastReceiver reciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if(bundle != null){
+                int result = bundle.getInt("result");
+                if(result == RESULT_OK)
+                    Toast.makeText(MainActivity.this, "به روز رسانی با موفقیت انجام شد.", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +41,9 @@ public class MainActivity extends android.app.Activity {
 
         dataSource = new ActivityDataSource(this);
         dataSource.open();
+
+        Intent serviceIntent =  new Intent(this, SyncService.class);
+        startService(serviceIntent);
 
 
         Button addActivityButton = (Button)findViewById(R.id.AddActivity);
@@ -53,6 +71,10 @@ public class MainActivity extends android.app.Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
+
+
         List<Activity> activities = new ArrayList<Activity>();
 
         try{
