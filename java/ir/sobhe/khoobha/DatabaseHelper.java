@@ -64,6 +64,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " row_id integer not null,"
             + " created_at timestamp default current_timestamp);";
 
+    private static final String GROUP_CREATE = ""
+            + "CREATE TABLE group (" +
+            "id integer null default null, " +
+            "title varchar(255) null default null, " +
+            "slug varchar(100) null default null, " +
+            "image varchar(50) null default null, " +
+            "version varchar(10) null default null, " +
+            "synced_at timestamp null default null, " +
+            "assistant_email varchar(50) null default null, " +
+            "assistant_password varchar(50) null default null, " +
+            "options text null default null" +
+            ");";
+
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -75,6 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(ACTIVITY_CREATE);
             sqLiteDatabase.execSQL(RECORD_CREATE);
             sqLiteDatabase.execSQL(LOGS_CREATE);
+            sqLiteDatabase.execSQL(GROUP_CREATE);
         }catch (Exception e){
             e.printStackTrace();
         }
