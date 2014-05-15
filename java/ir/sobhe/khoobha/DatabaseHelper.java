@@ -35,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CHILD_CREATE = ""
             + "CREATE TABLE " + TABLE_CHILD + " ("
             + COLUMN_ID + " integer NOT NULL PRIMARY KEY, "
-            + COLUMN_NAME + " varchar(100) NOT NULL);";
+            + COLUMN_NAME + " varchar(100));";
 
     private static final String ACTIVITY_CREATE = ""
             + "create table " + TABLE_ACTIVITY + " ("

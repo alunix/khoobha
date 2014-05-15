@@ -33,9 +33,8 @@ public class ChildDataSource {
     public void addChild(Child child){
         try{
             ContentValues values = new ContentValues();
-            values.put(DatabaseHelper.COLUMN_ID, child.id);
             values.put(DatabaseHelper.COLUMN_NAME, child.name);
-            database.insert(DatabaseHelper.TABLE_CHILD, null, values);
+            child.id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -63,9 +62,17 @@ public class ChildDataSource {
         return children;
     }
 
+    public boolean updateChild(Child child){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COLUMN_ID, child.id);
+        values.put(DatabaseHelper.COLUMN_NAME, child.name);
+        return database.update(DatabaseHelper.TABLE_CHILD,values, DatabaseHelper.COLUMN_ID + "=" + child.id, null) > 0;
+    }
+
     private Child cursorToChild(Cursor cursor){
         return new Child(cursor.getLong(0),cursor.getString(1));
     }
+
 
 
 

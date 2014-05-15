@@ -63,6 +63,8 @@ public class MainActivity extends android.app.Activity {
             @Override
             public void onClick(View view) {
                 //go to adding new child page
+                Intent addChildIntent = new Intent(MainActivity.this, AddChildActivity.class);
+                startActivity(addChildIntent);
             }
         });
 
