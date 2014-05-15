@@ -14,7 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_CHILD = "child";
     public static final String TABLE_ACTIVITY = "activity";
     public static final String TABLE_RECORD = "record";
-    public static final String TABLE_LOGS = "logs"
+    public static final String TABLE_LOGS = "log";
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
@@ -58,10 +58,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_DATE + " date NOT NULL);";
 
     private static final String LOGS_CREATE = ""
-            + "CREATE TABLE logs ("
-            + " table_name varchar(20) not null,"
-            + " operation varchar(10) not null, -- enum(\"insert\",\"update\", \"delete\")"
-            + " row_id integer not null,"
+            + "CREATE TABLE log ("
+            + " table_name varchar(20) not null, "
+            + " operation varchar(10) not null, "
+            + " row_id integer not null, "
             + " created_at timestamp default current_timestamp);";
 
     private static final String GROUP_CREATE = ""
