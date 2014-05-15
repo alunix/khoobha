@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.sql.SQLInput;
+
 /**
  * Created by hadi on 14/5/8 AD.
  */
@@ -12,6 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_CHILD = "child";
     public static final String TABLE_ACTIVITY = "activity";
     public static final String TABLE_RECORD = "record";
+    public static final String TABLE_LOGS = "logs"
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
@@ -21,7 +24,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CHILD_LIST = "child_list";
     public static final String COLUMN_ITEMS = "items";
     public static final String COLUMN_DATE = "date";
-
+    public static final String COLUMN_ROW_ID = "row_id";
+    public static final String COLUMN_TABLE_NAME = "table_name";
+    public static final String COLUMN_CREATED_AT = "created_att";
+    public static final String COLUMN_OPERATION = "operation";
 
 
     private static final String DATABASE_NAME = "khoobha.db";
@@ -51,6 +57,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_ITEMS + " integer unsigned NOT NULL, "
             + COLUMN_DATE + " date NOT NULL);";
 
+    private static final String LOGS_CREATE = ""
+            + "CREATE TABLE logs ("
+            + " table_name varchar(20) not null,"
+            + " operation varchar(10) not null, -- enum(\"insert\",\"update\", \"delete\")"
+            + " row_id integer not null,"
+            + " created_at timestamp default current_timestamp);";
+
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -61,6 +74,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(CHILD_CREATE);
             sqLiteDatabase.execSQL(ACTIVITY_CREATE);
             sqLiteDatabase.execSQL(RECORD_CREATE);
+            sqLiteDatabase.execSQL(LOGS_CREATE);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package ir.sobhe.khoobha;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -40,11 +41,30 @@ public class AddChildActivity extends ActionBarActivity {
         btn_saveChild.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FileOutputStream out = null;
+                Bitmap photo = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+                child = new Child(photo);
+                dataSource.addChild(child);
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Khoobha";
+                try {
+                    File dir = new File(path);
+                    dir.mkdirs();
+                    out = new FileOutputStream(new File(dir, Long.toString(child.id)+".png"));
+                    photo.compress(Bitmap.CompressFormat.PNG, 90, out);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try{
+                        out.close();
+                    } catch(Throwable ignore) {}
+                }
+
                 EditText txt_childName = (EditText)findViewById(R.id.txt_childName);
                 child.name = txt_childName.getText().toString();
                 if(child.name == "نام")
                     child.name = null;
                 dataSource.updateChild(child);
+
                 finish();
             }
         });
@@ -57,25 +77,8 @@ public class AddChildActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            child = new Child(photo);
-            dataSource.addChild(child);
             imageView.setImageBitmap(photo);
-            FileOutputStream out = null;
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Khoobha";
 
-
-            try {
-                File dir = new File(path);
-                dir.mkdirs();
-                out = new FileOutputStream(new File(dir, Long.toString(child.id)+".png"));
-                photo.compress(Bitmap.CompressFormat.PNG, 90, out);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try{
-                    out.close();
-                } catch(Throwable ignore) {}
-            }
         }
         else
             finish();

@@ -35,6 +35,7 @@ public class ChildDataSource {
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.COLUMN_NAME, child.name);
             child.id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
+            Logger.log(database,DatabaseHelper.TABLE_CHILD, Logger.OPERATIONS.INSERT,child.id);
         }
         catch (Exception e){
             e.printStackTrace();
