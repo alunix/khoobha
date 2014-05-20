@@ -62,12 +62,13 @@ public class LoginActivity extends Activity {
      * Keep track of the login task to ensure we can cancel it if requested.
      */
 
-    private final String ADDRESS = "http://khoobha.net/api/login";
+    private final String ADDRESS = "http://khoobha.net/api/register";
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private EditText mTitleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,8 @@ public class LoginActivity extends Activity {
             }
         });
 
+        mTitleView = (EditText)findViewById(R.id.txt_groupName);
+
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -104,6 +107,7 @@ public class LoginActivity extends Activity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
     }
 
 
@@ -122,6 +126,7 @@ public class LoginActivity extends Activity {
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String title = mTitleView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -144,6 +149,11 @@ public class LoginActivity extends Activity {
             focusView = mEmailView;
             cancel = true;
         }
+        else if(title == null){
+            mTitleView.setError("لطفا نام مجموعه خود را وارد کنید");
+            focusView = mTitleView;
+            cancel = true;
+        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -156,8 +166,10 @@ public class LoginActivity extends Activity {
             List<NameValuePair> pairs = new ArrayList<NameValuePair>();
             pairs.add(new BasicNameValuePair("email", email));
             pairs.add(new BasicNameValuePair("password", password));
+            pairs.add(new BasicNameValuePair("title", title));
+
             try{
-                post.setEntity(new UrlEncodedFormEntity(pairs));
+                post.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
                 HttpResponse response = client.execute(post);
                 int responseCode = response.getStatusLine().getStatusCode();
                 String result = "";
@@ -166,10 +178,10 @@ public class LoginActivity extends Activity {
                     JSONObject jsonObject = new JSONObject(result);
                     String status = jsonObject.getString("status");
                     if(status.equalsIgnoreCase("success")){
-                        int group = (Integer)(jsonObject.getJSONArray("groups").get(0));
+                        int group = jsonObject.getInt("group");
                         GroupDataSource groupDataSource = new GroupDataSource(this);
                         groupDataSource.open();
-                        groupDataSource.addGroup(new Group(group,email,password));
+                        groupDataSource.addGroup(new Group(group, title, email,password));
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                         SharedPreferences.Editor edit = prefs.edit();
                         edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);

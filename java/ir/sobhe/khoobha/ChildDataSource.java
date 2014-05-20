@@ -32,9 +32,14 @@ public class ChildDataSource {
 
     public void addChild(Child child){
         try{
+            String query = String.format("(SELECT max(%s) FROM %s) AS max",DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE_CHILD);
+            Cursor c = database.rawQuery(query,null);
+            int previousId = c.getColumnIndex("max");
+            child.id = previousId + 1;
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.COLUMN_NAME, child.name);
-            child.id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
+            values.put(DatabaseHelper.COLUMN_ID, child.id);
+            database.insert(DatabaseHelper.TABLE_CHILD, null, values);
             Logger.log(database,DatabaseHelper.TABLE_CHILD, Logger.OPERATIONS.INSERT,child.id);
         }
         catch (Exception e){

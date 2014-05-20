@@ -7,11 +7,13 @@ public class Group {
     public long id;
     public String assistantEmail;
     public String assisrantPassword;
+    public String groupTitle;
 
-    public Group(long groupId, String email, String password){
+    public Group(long groupId, String title, String email, String password){
         id = groupId;
         assistantEmail = email;
         assisrantPassword = password;
+        groupTitle = title;
     }
 
 }
