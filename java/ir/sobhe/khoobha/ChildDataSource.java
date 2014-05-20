@@ -2,9 +2,11 @@ package ir.sobhe.khoobha;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +19,12 @@ public class ChildDataSource {
     private SQLiteDatabase database;
     private DatabaseHelper dbHelper;
     private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_NAME};
+    private SharedPreferences prefs;
 
     public ChildDataSource(Context context){
         dbHelper = new DatabaseHelper(context);
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
     }
 
     public void open() throws SQLException {
@@ -32,10 +37,17 @@ public class ChildDataSource {
 
     public void addChild(Child child){
         try{
-            String query = String.format("(SELECT max(%s) FROM %s) AS max",DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE_CHILD);
-            Cursor c = database.rawQuery(query,null);
-            int previousId = c.getColumnIndex("max");
-            child.id = previousId + 1;
+            int groupId = prefs.getInt("groupId", 0);
+            int firstChildId = groupId * 1000;
+            String query = String.format("SELECT id FROM %s WHERE id = %d", DatabaseHelper.TABLE_CHILD, firstChildId);
+            Cursor c = database.rawQuery(query, null);
+            if(c.getCount() == 0)
+                child.id = firstChildId;
+            else{
+                query = String.format("(SELECT max(%s) FROM %s) AS max",DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE_CHILD);
+                c = database.rawQuery(query,null);
+                child.id = c.getColumnIndex("max") + 1;
+            }
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.COLUMN_NAME, child.name);
             values.put(DatabaseHelper.COLUMN_ID, child.id);
