@@ -44,9 +44,10 @@ public class ChildDataSource {
             if(c.getCount() == 0)
                 child.id = firstChildId;
             else{
-                query = String.format("(SELECT max(%s) FROM %s) AS max",DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE_CHILD);
+                query = String.format("SELECT max(%s) FROM %s WHERE id/1000 = %d",DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE_CHILD, groupId);
                 c = database.rawQuery(query,null);
-                child.id = c.getColumnIndex("max") + 1;
+                c.moveToFirst();
+                child.id = c.getInt(0) + 1;
             }
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.COLUMN_NAME, child.name);

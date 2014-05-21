@@ -32,7 +32,7 @@ public class GroupDataSource {
             values.put("assistant_email", group.assistantEmail);
             values.put("assistant_password", group.assisrantPassword);
             values.put("title", group.groupTitle);
-            database.insert("group",null,values);
+            database.insert(DatabaseHelper.TABLE_GROUP,null,values);
         }catch (Exception e){
             e.printStackTrace();
         }

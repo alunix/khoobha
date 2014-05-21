@@ -15,6 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_ACTIVITY = "activity";
     public static final String TABLE_RECORD = "record";
     public static final String TABLE_LOGS = "log";
+    public static final String TABLE_GROUP = "`group`";
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
@@ -26,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_ROW_ID = "row_id";
     public static final String COLUMN_TABLE_NAME = "table_name";
-    public static final String COLUMN_CREATED_AT = "created_att";
+    public static final String COLUMN_CREATED_AT = "created_at";
     public static final String COLUMN_OPERATION = "operation";
 
 
@@ -65,7 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " created_at timestamp default current_timestamp);";
 
     private static final String GROUP_CREATE = ""
-            + "CREATE TABLE group (" +
+            + "CREATE TABLE "+ TABLE_GROUP +" (" +
             "id integer null default null, " +
             "title varchar(255) null default null, " +
             "slug varchar(100) null default null, " +
