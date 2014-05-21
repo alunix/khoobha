@@ -55,6 +55,7 @@ public class ActivityDataSource {
             values.put(DatabaseHelper.COLUMN_TITLE, activity.title);
             values.put(DatabaseHelper.COLUMN_POINTS, activity.points);
             database.insert(DatabaseHelper.TABLE_ACTIVITY, null, values);
+            Logger.log(database,DatabaseHelper.TABLE_ACTIVITY, Logger.OPERATIONS.INSERT,activity.id);
         }
         catch (Exception e){
             e.printStackTrace();
