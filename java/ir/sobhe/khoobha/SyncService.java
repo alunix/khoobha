@@ -15,7 +15,9 @@ import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -120,7 +122,13 @@ public class SyncService extends IntentService {
             } else
                 continue;
 
-            result = send(url, args, filename);
+            if (operation.equals("insert"))
+                result = send(new HttpPost("http://khoobha.net/api/" + url), args, filename);
+            else if (operation.equals("update"))
+                result = send(new HttpPut("http://khoobha.net/api/" + url + id), args, filename);
+            else
+                continue;
+
             if (operation.equals("insert")) {
                 try {
                     updateId(database, table, id, result.getString("id"));
@@ -154,9 +162,7 @@ public class SyncService extends IntentService {
     }
 
 
-    private JSONObject send(String url, List<NameValuePair> args, String filename) {
-        HttpPost request = new HttpPost("http://khoobha.net/api/" + url);
-
+    private JSONObject send(HttpEntityEnclosingRequestBase request, List<NameValuePair> args, String filename) {
         // authentication
         try {
             request.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(email, password), request));
