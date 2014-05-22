@@ -83,7 +83,8 @@ public class SyncService extends IntentService {
         if (synced_at == null) synced_at = "";
 
         List<NameValuePair> args = new ArrayList<NameValuePair>();
-        String table, id, last = "";
+        String table, id, operation, url = "", filename = "", last = "";
+        JSONObject result;
 
         // read logs
         cursor = database.rawQuery("select table_name, row_id, operation, created_at from log where created_at > '"+ synced_at +"'", null);
@@ -91,6 +92,7 @@ public class SyncService extends IntentService {
         while (!cursor.isAfterLast()) {
             table = cursor.getString(0);
             id = cursor.getString(1);
+            operation = cursor.getString(2);
             last = cursor.getString(3);
 
             cursor2 = database.rawQuery("select * from "+ table +" where id = "+ id, null);
@@ -100,20 +102,31 @@ public class SyncService extends IntentService {
             if (table.equals(DatabaseHelper.TABLE_CHILD)) {
                 args.add(new BasicNameValuePair("id", id));
                 args.add(new BasicNameValuePair("name", cursor2.getString(1)));
-                send("childs/", args, id +".png");
+                url = "childs/";
+                filename = id +".png";
             }
             else if (table.equals(DatabaseHelper.TABLE_ACTIVITY)) {
                 args.add(new BasicNameValuePair("id", id));
                 args.add(new BasicNameValuePair("title", cursor2.getString(1)));
                 args.add(new BasicNameValuePair("points", cursor2.getString(2)));
-                send("activities/", args, "");
+                url = "activities/";
             }
             else if (table.equals(DatabaseHelper.TABLE_RECORD)) {
                 args.add(new BasicNameValuePair("activity", cursor2.getString(1)));
                 args.add(new BasicNameValuePair("child_list", cursor2.getString(2)));
                 args.add(new BasicNameValuePair("items", cursor2.getString(3)));
                 args.add(new BasicNameValuePair("date", cursor2.getString(4)));
-                send("records/", args, "");
+                url = "records/";
+            } else
+                continue;
+
+            result = send(url, args, filename);
+            if (operation.equals("insert")) {
+                try {
+                    updateId(database, table, id, result.getString("id"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             cursor.moveToNext();
@@ -125,6 +138,21 @@ public class SyncService extends IntentService {
 
         dbHelper.close();
     }
+
+    private void updateId(SQLiteDatabase database, String table, String oldId, String newId) {
+        if (table.equals(DatabaseHelper.TABLE_CHILD)) {
+            database.execSQL("update child set id = "+ newId +" where id = "+ oldId);
+            database.execSQL("update record set child_list = replace(child_list, '*"+ oldId +"*', '*"+ newId +"*')");
+        }
+        else if (table.equals(DatabaseHelper.TABLE_ACTIVITY)) {
+            database.execSQL("update activity set id = "+ newId +" where id = "+ oldId);
+            database.execSQL("update record set activity_id = "+ newId +" where activity_id = "+ oldId);
+        }
+
+        if (table.equals(DatabaseHelper.TABLE_CHILD) || table.equals(DatabaseHelper.TABLE_ACTIVITY))
+            database.execSQL("update log set row_id = "+ newId +" where table_name = '"+ table +"' and row_id = "+ oldId);
+    }
+
 
     private JSONObject send(String url, List<NameValuePair> args, String filename) {
         HttpPost request = new HttpPost("http://khoobha.net/api/" + url);
