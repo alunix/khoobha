@@ -16,15 +16,19 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.protocol.HTTP;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,17 +63,26 @@ public class SyncService extends IntentService {
             e.printStackTrace();
         }
 
-        // parameters
-        args.add(new BasicNameValuePair("group", groupId));
-        try {
-            request.setEntity(new UrlEncodedFormEntity(args, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        ContentType contentType = ContentType.create(HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8);
 
+        // parameters
+        builder.addTextBody("group", groupId);
+        for(int i = 0; i < args.size(); i++)
+            builder.addPart(args.get(i).getName(), new StringBody(args.get(i).getValue(), contentType));
+
+        // image
+        if (!filename.isEmpty())
+            builder.addPart("image", new FileBody(new File(directory , filename)));
+
+        request.setEntity(builder.build());
+
+        // send
         HttpClient client = new DefaultHttpClient();
         try {
             HttpResponse response = client.execute(request);
+            // Log.d("response", EntityUtils.toString(response.getEntity()));
         } catch (IOException e) {
             e.printStackTrace();
         }
