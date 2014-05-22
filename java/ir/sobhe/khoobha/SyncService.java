@@ -53,43 +53,22 @@ public class SyncService extends IntentService {
         directory = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Khoobha";
     }
 
-    private void send(String url, List<NameValuePair> args, String filename) {
-        HttpPost request = new HttpPost("http://khoobha.net/api/" + url);
-
-        // authentication
-        try {
-            request.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(email, password), request));
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
-
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        ContentType contentType = ContentType.create(HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8);
-
-        // parameters
-        builder.addTextBody("group", groupId);
-        for(int i = 0; i < args.size(); i++)
-            builder.addPart(args.get(i).getName(), new StringBody(args.get(i).getValue(), contentType));
-
-        // image
-        if (!filename.isEmpty())
-            builder.addPart("image", new FileBody(new File(directory , filename)));
-
-        request.setEntity(builder.build());
-
-        // send
-        HttpClient client = new DefaultHttpClient();
-        try {
-            HttpResponse response = client.execute(request);
-            // Log.d("response", EntityUtils.toString(response.getEntity()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void publishResult(int result){
+        Intent intent = new Intent(NOTIFICATION);
+        intent.putExtra("result", result);
+        sendBroadcast(intent);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        sync();
+
+        //when everything has been done
+        publishResult(result);
+        stopSelf();
+    }
+
+    private void sync() {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         Cursor cursor, cursor2;
@@ -145,15 +124,44 @@ public class SyncService extends IntentService {
             database.execSQL("update `group` set synced_at='"+ last +"'");
 
         dbHelper.close();
-
-        //when everything has been done
-        publishResult(result);
-        stopSelf();
     }
 
-    private void publishResult(int result){
-        Intent intent = new Intent(NOTIFICATION);
-        intent.putExtra("result", result);
-        sendBroadcast(intent);
+    private JSONObject send(String url, List<NameValuePair> args, String filename) {
+        HttpPost request = new HttpPost("http://khoobha.net/api/" + url);
+
+        // authentication
+        try {
+            request.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(email, password), request));
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
+
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        ContentType contentType = ContentType.create(HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8);
+
+        // parameters
+        builder.addTextBody("group", groupId);
+        for(int i = 0; i < args.size(); i++)
+            builder.addPart(args.get(i).getName(), new StringBody(args.get(i).getValue(), contentType));
+
+        // image
+        if (!filename.isEmpty())
+            builder.addPart("image", new FileBody(new File(directory , filename)));
+
+        request.setEntity(builder.build());
+
+        // send
+        HttpClient client = new DefaultHttpClient();
+        try {
+            HttpResponse response = client.execute(request);
+            return new JSONObject(EntityUtils.toString(response.getEntity()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return new JSONObject();
     }
 }
