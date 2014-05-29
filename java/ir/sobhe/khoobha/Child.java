@@ -18,22 +18,23 @@ public class Child {
     public long id;
     public String name;
     public Bitmap image;
+    String imageName;
 
 
-    public Child(long col_id, String col_name){
+    public Child(long col_id, String col_name, String imgName){
         id = col_id;
         name = col_name;
+        imageName = imgName;
     }
 
-    public Child(Bitmap img){
+    public Child(Bitmap img, String imgName){
         image = img;
+        imageName = imgName;
     }
 
     public Child()
     {
 
     }
-
-
 
 }

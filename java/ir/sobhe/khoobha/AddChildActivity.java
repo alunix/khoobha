@@ -43,7 +43,7 @@ public class AddChildActivity extends ActionBarActivity {
             public void onClick(View view) {
                 FileOutputStream out = null;
                 Bitmap photo = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-                child = new Child(photo);
+                child = new Child(photo, null);
                 dataSource.addChild(child);
                 String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Khoobha";
                 try {
@@ -61,6 +61,7 @@ public class AddChildActivity extends ActionBarActivity {
 
                 EditText txt_childName = (EditText)findViewById(R.id.txt_childName);
                 child.name = txt_childName.getText().toString();
+                child.imageName = Long.toString(child.id);
                 if(child.name == "نام")
                     child.name = null;
                 dataSource.updateChild(child);
@@ -68,10 +69,6 @@ public class AddChildActivity extends ActionBarActivity {
                 finish();
             }
         });
-
-
-
-
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

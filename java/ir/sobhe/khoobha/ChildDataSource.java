@@ -37,22 +37,11 @@ public class ChildDataSource {
 
     public void addChild(Child child){
         try{
-            int groupId = prefs.getInt("groupId", 0);
-            int firstChildId = groupId * 1000;
-            String query = String.format("SELECT id FROM %s WHERE id = %d", DatabaseHelper.TABLE_CHILD, firstChildId);
-            Cursor c = database.rawQuery(query, null);
-            if(c.getCount() == 0)
-                child.id = firstChildId;
-            else{
-                query = String.format("SELECT max(%s) FROM %s WHERE id/1000 = %d",DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE_CHILD, groupId);
-                c = database.rawQuery(query,null);
-                c.moveToFirst();
-                child.id = c.getInt(0) + 1;
-            }
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.COLUMN_NAME, child.name);
             values.put(DatabaseHelper.COLUMN_ID, child.id);
-            database.insert(DatabaseHelper.TABLE_CHILD, null, values);
+            values.put(DatabaseHelper.COLUMN_IMAGE, child.imageName);
+            long id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
             Logger.log(database,DatabaseHelper.TABLE_CHILD, Logger.OPERATIONS.INSERT,child.id);
         }
         catch (Exception e){
@@ -89,10 +78,7 @@ public class ChildDataSource {
     }
 
     private Child cursorToChild(Cursor cursor){
-        return new Child(cursor.getLong(0),cursor.getString(1));
+        return new Child(cursor.getLong(0),cursor.getString(1),cursor.getString(2));
     }
-
-
-
 
 }

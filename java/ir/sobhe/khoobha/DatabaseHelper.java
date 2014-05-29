@@ -29,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TABLE_NAME = "table_name";
     public static final String COLUMN_CREATED_AT = "created_at";
     public static final String COLUMN_OPERATION = "operation";
+    public static final String COLUMN_IMAGE = "image";
 
 
     private static final String DATABASE_NAME = "khoobha.db";
@@ -42,7 +43,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CHILD_CREATE = ""
             + "CREATE TABLE " + TABLE_CHILD + " ("
             + COLUMN_ID + " integer NOT NULL PRIMARY KEY, "
-            + COLUMN_NAME + " varchar(100));";
+            + COLUMN_NAME + " varchar(100) null default null, "
+            + COLUMN_IMAGE + " varchar(10) null default null);";
+
+
 
     private static final String ACTIVITY_CREATE = ""
             + "create table " + TABLE_ACTIVITY + " ("

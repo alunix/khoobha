@@ -37,18 +37,6 @@ public class ActivityDataSource {
 
     public void addActivity(Activity activity){
         try{
-            int groupId = prefs.getInt("groupId", 0);
-            int firstActivityId = groupId * 1000;
-            String query = String.format("SELECT id FROM %s WHERE id = %d", DatabaseHelper.TABLE_ACTIVITY, firstActivityId);
-            Cursor c = database.rawQuery(query, null);
-            if(c.getCount() == 0)
-                activity.id = firstActivityId;
-            else{
-                query = String.format("SELECT max(%s) FROM %s WHERE id/1000 = %d",DatabaseHelper.COLUMN_ID, DatabaseHelper.TABLE_CHILD, groupId);
-                c = database.rawQuery(query,null);
-                c.moveToFirst();
-                activity.id = c.getInt(0) + 1;
-            }
             ContentValues values = new ContentValues();
             if(activity.id != -1)
                 values.put(DatabaseHelper.COLUMN_ID, activity.id);

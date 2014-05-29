@@ -114,6 +114,7 @@ public class MainActivity extends android.app.Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 //go to scoring page for selected activity
+
             }
         });
     }
