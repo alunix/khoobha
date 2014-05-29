@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -192,6 +193,7 @@ public class SyncService extends IntentService {
         HttpClient client = new DefaultHttpClient();
         try {
             HttpResponse response = client.execute(request);
+            Toast.makeText(this, EntityUtils.toString(response.getEntity()),1000).show();
             return new JSONObject(EntityUtils.toString(response.getEntity()));
         } catch (IOException e) {
             e.printStackTrace();

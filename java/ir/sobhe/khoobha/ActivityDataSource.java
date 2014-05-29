@@ -38,11 +38,9 @@ public class ActivityDataSource {
     public void addActivity(Activity activity){
         try{
             ContentValues values = new ContentValues();
-            if(activity.id != -1)
-                values.put(DatabaseHelper.COLUMN_ID, activity.id);
             values.put(DatabaseHelper.COLUMN_TITLE, activity.title);
             values.put(DatabaseHelper.COLUMN_POINTS, activity.points);
-            database.insert(DatabaseHelper.TABLE_ACTIVITY, null, values);
+            activity.id = database.insert(DatabaseHelper.TABLE_ACTIVITY, null, values);
             Logger.log(database,DatabaseHelper.TABLE_ACTIVITY, Logger.OPERATIONS.INSERT,activity.id);
         }
         catch (Exception e){

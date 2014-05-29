@@ -39,9 +39,8 @@ public class ChildDataSource {
         try{
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.COLUMN_NAME, child.name);
-            values.put(DatabaseHelper.COLUMN_ID, child.id);
             values.put(DatabaseHelper.COLUMN_IMAGE, child.imageName);
-            long id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
+            child.id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
             Logger.log(database,DatabaseHelper.TABLE_CHILD, Logger.OPERATIONS.INSERT,child.id);
         }
         catch (Exception e){
