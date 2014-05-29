@@ -109,7 +109,7 @@ public class SyncService extends IntentService {
                 args.add(new BasicNameValuePair("id", id));
                 args.add(new BasicNameValuePair("name", cursor2.getString(1)));
                 url = "childs/";
-                filename = id +".png";
+                filename = cursor2.getString(2);
             }
             else if (table.equals(DatabaseHelper.TABLE_ACTIVITY)) {
                 args.add(new BasicNameValuePair("id", id));
@@ -152,17 +152,13 @@ public class SyncService extends IntentService {
     }
 
     private void updateId(SQLiteDatabase database, String table, String oldId, String newId) {
-        if (table.equals(DatabaseHelper.TABLE_CHILD)) {
-            database.execSQL("update child set id = "+ newId +" where id = "+ oldId);
-            database.execSQL("update record set child_list = replace(child_list, '*"+ oldId +"*', '*"+ newId +"*')");
-        }
-        else if (table.equals(DatabaseHelper.TABLE_ACTIVITY)) {
-            database.execSQL("update activity set id = "+ newId +" where id = "+ oldId);
-            database.execSQL("update record set activity_id = "+ newId +" where activity_id = "+ oldId);
-        }
+        database.execSQL("update "+ table +" set id = "+ newId +" where id = "+ oldId);
+        database.execSQL("update log set row_id = "+ newId +" where table_name = '"+ table +"' and row_id = "+ oldId);
 
-        if (table.equals(DatabaseHelper.TABLE_CHILD) || table.equals(DatabaseHelper.TABLE_ACTIVITY))
-            database.execSQL("update log set row_id = "+ newId +" where table_name = '"+ table +"' and row_id = "+ oldId);
+        if (table.equals(DatabaseHelper.TABLE_CHILD))
+            database.execSQL("update record set child_list = replace(trim(replace(replace(','||child_list||',', ',"+ oldId +",', ',"+ newId +",'), ',', ' ')), ' ', ',')");
+        else if (table.equals(DatabaseHelper.TABLE_ACTIVITY))
+            database.execSQL("update record set activity_id = "+ newId +" where activity_id = "+ oldId);
     }
 
 
