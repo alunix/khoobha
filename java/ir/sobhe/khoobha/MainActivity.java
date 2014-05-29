@@ -44,11 +44,11 @@ public class MainActivity extends android.app.Activity {
         dataSource = new ActivityDataSource(this);
         dataSource.open();
 
-        Intent serviceIntent =  new Intent(this, SyncService.class);
-        startService(serviceIntent);
+        final Intent serviceIntent =  new Intent(this, SyncService.class);
 
 
         Button addActivityButton = (Button)findViewById(R.id.AddActivity);
+
 
         addActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,21 +70,31 @@ public class MainActivity extends android.app.Activity {
             }
         });
 
+        Button syncBytton = (Button)findViewById(R.id.sync);
+        syncBytton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
+                if(!previouslyStarted){
+
+                    Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(loginIntent);
+                }
+
+                startService(serviceIntent);
+                registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
+            }
+        });
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
-        if(!previouslyStarted){
 
-            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(loginIntent);
-        }
-
-        registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
 
 
         List<Activity> activities = new ArrayList<Activity>();
