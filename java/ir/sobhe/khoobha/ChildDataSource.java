@@ -73,6 +73,7 @@ public class ChildDataSource {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_ID, child.id);
         values.put(DatabaseHelper.COLUMN_NAME, child.name);
+        values.put(DatabaseHelper.COLUMN_IMAGE, child.imageName);
         return database.update(DatabaseHelper.TABLE_CHILD,values, DatabaseHelper.COLUMN_ID + "=" + child.id, null) > 0;
     }
 

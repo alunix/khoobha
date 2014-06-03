@@ -44,14 +44,16 @@ public class AddChildActivity extends ActionBarActivity {
                 FileOutputStream out = null;
                 Bitmap photo = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
                 child = new Child(photo, null);
+                child.imageName = Long.toString(System.currentTimeMillis())+".png";
                 dataSource.addChild(child);
                 String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Khoobha";
                 try {
                     File dir = new File(path);
                     dir.mkdirs();
-                    out = new FileOutputStream(new File(dir, Long.toString(child.id)+".png"));
+                    out = new FileOutputStream(new File(dir, child.imageName));
                     photo.compress(Bitmap.CompressFormat.PNG, 90, out);
                 } catch (Exception e) {
+                    child.imageName = "";
                     e.printStackTrace();
                 } finally {
                     try{
@@ -61,7 +63,6 @@ public class AddChildActivity extends ActionBarActivity {
 
                 EditText txt_childName = (EditText)findViewById(R.id.txt_childName);
                 child.name = txt_childName.getText().toString();
-                child.imageName = Long.toString(child.id);
                 if(child.name == "نام")
                     child.name = null;
                 dataSource.updateChild(child);
