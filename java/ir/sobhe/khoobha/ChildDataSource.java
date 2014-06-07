@@ -18,7 +18,7 @@ public class ChildDataSource {
 
     private SQLiteDatabase database;
     private DatabaseHelper dbHelper;
-    private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_NAME};
+    private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_NAME, DatabaseHelper.COLUMN_IMAGE};
     private SharedPreferences prefs;
 
     public ChildDataSource(Context context){
@@ -78,7 +78,14 @@ public class ChildDataSource {
     }
 
     private Child cursorToChild(Cursor cursor){
-        return new Child(cursor.getLong(0),cursor.getString(1),cursor.getString(2));
+        try{
+            return new Child(cursor.getLong(0),cursor.getString(1),cursor.getString(2));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
 }

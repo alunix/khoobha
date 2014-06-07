@@ -46,9 +46,8 @@ public class AddChildActivity extends ActionBarActivity {
                 child = new Child(photo, null);
                 child.imageName = Long.toString(System.currentTimeMillis())+".png";
                 dataSource.addChild(child);
-                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Khoobha";
                 try {
-                    File dir = new File(path);
+                    File dir = new File(Child.DIR_PATH);
                     dir.mkdirs();
                     out = new FileOutputStream(new File(dir, child.imageName));
                     photo.compress(Bitmap.CompressFormat.PNG, 90, out);

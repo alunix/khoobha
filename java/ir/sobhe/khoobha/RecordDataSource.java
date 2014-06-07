@@ -40,12 +40,11 @@ public class RecordDataSource {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
             ContentValues values = new ContentValues();
-            values.put(DatabaseHelper.COLUMN_ID, record.id);
             values.put(DatabaseHelper.COLUMN_ACTIVITY_ID, record.activity_id);
             values.put(DatabaseHelper.COLUMN_CHILD_LIST, record.child_list);
             values.put(DatabaseHelper.COLUMN_ITEMS, record.items);
             values.put(DatabaseHelper.COLUMN_DATE, dateFormat.format(record.date));
-            database.insert(DatabaseHelper.TABLE_CHILD, null, values);
+            record.id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
         }
         catch (Exception e){
             e.printStackTrace();

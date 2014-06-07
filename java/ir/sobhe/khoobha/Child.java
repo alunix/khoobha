@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.os.Environment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,10 +16,12 @@ import java.util.List;
  */
 public class Child {
 
+    public static final String DIR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Khoobha/";
     public long id;
     public String name;
     public Bitmap image;
-    String imageName;
+    public String imageName;
+    public boolean selected = false;
 
 
     public Child(long col_id, String col_name, String imgName){

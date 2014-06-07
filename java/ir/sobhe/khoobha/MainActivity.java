@@ -107,13 +107,16 @@ public class MainActivity extends android.app.Activity {
         }
 
         ActivitiesAdapter adapter = new ActivitiesAdapter(this, activities.toArray(new Activity[activities.size()]));
-        ListView listView = (ListView)findViewById(R.id.ActivitiesList);
+        final ListView listView = (ListView)findViewById(R.id.ActivitiesList);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 //go to scoring page for selected activity
+                Intent recordIntent = new Intent(MainActivity.this, RecordActivity.class);
+                recordIntent.putExtra("activityId", ((Activity)listView.getItemAtPosition(position)).id);
+                startActivity(recordIntent);
 
             }
         });

@@ -44,7 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "CREATE TABLE " + TABLE_CHILD + " ("
             + COLUMN_ID + " integer NOT NULL PRIMARY KEY, "
             + COLUMN_NAME + " varchar(100) null default null, "
-            + COLUMN_IMAGE + " varchar(10) null default null);";
+            + COLUMN_IMAGE + " varchar(100) null default null);";
 
 
 

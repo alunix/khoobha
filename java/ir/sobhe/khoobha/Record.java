@@ -13,6 +13,14 @@ public class Record {
     public int items;
     public Date date;
 
+    public Record(long ai, String cl, int col_items, Date d)
+    {
+        activity_id = ai;
+        child_list = cl;
+        items = col_items;
+        date = d;
+    }
+
     public Record(long _id, long ai, String cl, int col_items, Date d)
     {
         id = _id;
