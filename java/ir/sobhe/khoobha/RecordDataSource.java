@@ -54,6 +54,7 @@ public class RecordDataSource {
             values.put(DatabaseHelper.COLUMN_DATE, record.date);
             database.update(DatabaseHelper.TABLE_RECORD,values,DatabaseHelper.COLUMN_ID + " = " + id, null);
             record.id = id;
+            Logger.log(database,DatabaseHelper.TABLE_RECORD, Logger.OPERATIONS.UPDATE, record.id);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -80,6 +81,7 @@ public class RecordDataSource {
             values.put(DatabaseHelper.COLUMN_ITEMS, record.items);
             values.put(DatabaseHelper.COLUMN_DATE, record.date);
             record.id = database.insert(DatabaseHelper.TABLE_RECORD, null, values);
+            Logger.log(database, DatabaseHelper.TABLE_RECORD, Logger.OPERATIONS.INSERT, record.id);
         }
         catch (Exception e){
             e.printStackTrace();
