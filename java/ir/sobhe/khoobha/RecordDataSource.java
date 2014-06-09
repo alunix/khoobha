@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.spec.DHGenParameterSpec;
+
 /**
  * Created by hadi on 14/5/8 AD.
  */
@@ -38,16 +40,39 @@ public class RecordDataSource {
 
     public void addRecord(Record record){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try{
-            ContentValues values = new ContentValues();
-            values.put(DatabaseHelper.COLUMN_ACTIVITY_ID, record.activity_id);
-            values.put(DatabaseHelper.COLUMN_CHILD_LIST, record.child_list);
-            values.put(DatabaseHelper.COLUMN_ITEMS, record.items);
-            values.put(DatabaseHelper.COLUMN_DATE, dateFormat.format(record.date));
-            record.id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
+        String[] columns = {DatabaseHelper.COLUMN_ID};
+        String whereClause = DatabaseHelper.COLUMN_DATE + " = " + dateFormat.format(record.date)
+                             + " AND " + DatabaseHelper.COLUMN_ACTIVITY_ID + " = " + record.activity_id;
+        Cursor cursor = database.query(DatabaseHelper.TABLE_RECORD,columns,whereClause,null,null,null,null);
+        if( cursor.getCount() == 0)
+        {
+            try{
+                ContentValues values = new ContentValues();
+                values.put(DatabaseHelper.COLUMN_ACTIVITY_ID, record.activity_id);
+                values.put(DatabaseHelper.COLUMN_CHILD_LIST, record.child_list);
+                values.put(DatabaseHelper.COLUMN_ITEMS, record.items);
+                values.put(DatabaseHelper.COLUMN_DATE, dateFormat.format(record.date));
+                record.id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
-        catch (Exception e){
-            e.printStackTrace();
+        else{
+            cursor.moveToFirst();
+            long id = cursor.getLong(0);
+            try{
+                ContentValues values = new ContentValues();
+                values.put(DatabaseHelper.COLUMN_ACTIVITY_ID, record.activity_id);
+                values.put(DatabaseHelper.COLUMN_CHILD_LIST, record.child_list);
+                values.put(DatabaseHelper.COLUMN_ITEMS, record.items);
+                values.put(DatabaseHelper.COLUMN_DATE, dateFormat.format(record.date));
+                database.update(DatabaseHelper.TABLE_RECORD,values,DatabaseHelper.COLUMN_ID + " = " + id, null);
+                record.id = id;
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
