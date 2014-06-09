@@ -135,7 +135,7 @@ public class SyncService extends IntentService {
             if (operation.equals("insert"))
                 result = send(new HttpPost("http://khoobha.net/api/" + url), args, filename);
             else if (operation.equals("update"))
-                result = send(new HttpPut("http://khoobha.net/api/" + url + id), args, filename);
+                result = send(new HttpPut("http://khoobha.net/api/" + url + id + "/"), args, filename);
             else
                 continue;
 
