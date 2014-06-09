@@ -42,6 +42,7 @@ public class MainActivity extends android.app.Activity {
 
         dataSource = new ActivityDataSource(this);
         dataSource.open();
+        final SyncService s = new SyncService(this);
 
         final Intent serviceIntent =  new Intent(this, SyncService.class);
 
@@ -81,8 +82,12 @@ public class MainActivity extends android.app.Activity {
                     startActivity(loginIntent);
                 }
 
-                startService(serviceIntent);
-                registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
+
+                s.sync();
+
+
+                //startService(serviceIntent);
+                //registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
             }
         });
 

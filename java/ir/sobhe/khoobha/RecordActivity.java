@@ -59,13 +59,16 @@ public class RecordActivity extends android.app.Activity {
             @Override
             public void onClick(View view) {
                 List<String> children = new ArrayList<String>();
+                String childrenIds = "";
                 for(int i= 0 ; i < childrenListView.getCount(); i++){
                     Child c = (Child)childrenListView.getItemAtPosition(i);
                     if(c.selected){
                         children.add(Long.toString(c.id));
+                        childrenIds += Long.toString(c.id);
+                        if(i != childrenListView.getCount() - 1)
+                            childrenIds += ",";
                     }
                 }
-                String childrenIds = children.toString();
                 Record record = new Record(activityId, childrenIds, children.size(), date);
                 if(isupdate == true){
                     record.id = newRecord.id;
@@ -79,5 +82,12 @@ public class RecordActivity extends android.app.Activity {
             }
         });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        recordDataSource.close();
+        childDataSource.close();
     }
 }

@@ -2,6 +2,7 @@ package ir.sobhe.khoobha;
 
 import android.app.*;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -38,6 +39,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.datatype.Duration;
+
 /**
  * Created by hadi on 14/5/10 AD.
  */
@@ -47,9 +50,11 @@ public class SyncService extends IntentService {
     public static final String NOTIFICATION = "ir.sobhe.khoobha";
     private String groupId, email, password, synced_at;
     private String directory;
+    private Context context;
 
-    public SyncService(){
+    public SyncService(Context c){
         super("SyncService");
+        context = c;
 
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -67,6 +72,7 @@ public class SyncService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Toast.makeText(context, "سلام", Toast.LENGTH_LONG).show();
         sync();
 
         //when everything has been done
@@ -74,8 +80,8 @@ public class SyncService extends IntentService {
         stopSelf();
     }
 
-    private void sync() {
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
+    public void sync() {
+        DatabaseHelper dbHelper = new DatabaseHelper(context);
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         Cursor cursor, cursor2;
 
@@ -148,11 +154,12 @@ public class SyncService extends IntentService {
         if (!last.isEmpty())
             database.execSQL("update `group` set synced_at='"+ last +"'");
 
+        database.close();
         dbHelper.close();
     }
 
     private void updateId(SQLiteDatabase database, String table, String oldId, String newId) {
-        database.execSQL("update "+ table +" set id = "+ newId +" where id = "+ oldId);
+        database.execSQL("update `"+ table +"` set id = "+ newId +" where id = "+ oldId);
         database.execSQL("update log set row_id = "+ newId +" where table_name = '"+ table +"' and row_id = "+ oldId);
 
         if (table.equals(DatabaseHelper.TABLE_CHILD))
@@ -189,7 +196,7 @@ public class SyncService extends IntentService {
         HttpClient client = new DefaultHttpClient();
         try {
             HttpResponse response = client.execute(request);
-            Toast.makeText(this, EntityUtils.toString(response.getEntity()),1000).show();
+            //Toast.makeText(this, EntityUtils.toString(response.getEntity()),1000).show();
             return new JSONObject(EntityUtils.toString(response.getEntity()));
         } catch (IOException e) {
             e.printStackTrace();
