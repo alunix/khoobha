@@ -60,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_ACTIVITY_ID + " integer NOT NULL, "
             + COLUMN_CHILD_LIST + " varchar(1000) NOT NULL, "
             + COLUMN_ITEMS + " integer unsigned NOT NULL, "
-            + COLUMN_DATE + " date NOT NULL);";
+            + COLUMN_DATE + " varchar(10) NOT NULL);";
 
     private static final String LOGS_CREATE = ""
             + "CREATE TABLE log ("

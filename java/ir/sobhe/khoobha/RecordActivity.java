@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,6 +16,8 @@ public class RecordActivity extends android.app.Activity {
 
     private ChildDataSource childDataSource;
     private RecordDataSource recordDataSource;
+    private String date;
+    private boolean isupdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +32,28 @@ public class RecordActivity extends android.app.Activity {
 
         Intent intent = getIntent();
         final long activityId = intent.getLongExtra("activityId", 0);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        date = df.format(c.getTime());
+
 
         List<Child> childrenList = childDataSource.getAllChildren();
+        final Record newRecord = recordDataSource.getRecord(activityId, date);
+        if(newRecord != null){
+            isupdate = true;
+            for(Child child : childrenList){
+                if(newRecord.child_list.contains(Long.toString(child.id)))
+                    child.selected = true;
+            }
+        }
+
         ChildrenAdapter adapter = new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()]));
         final ListView childrenListView = (ListView)findViewById(R.id.childrenList);
         childrenListView.setAdapter(adapter);
 
         Button btn_ok = (Button)findViewById(R.id.btn_ok);
+
+
 
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,18 +66,18 @@ public class RecordActivity extends android.app.Activity {
                     }
                 }
                 String childrenIds = children.toString();
-                Calendar c = Calendar.getInstance();
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String dateString = df.format(c.getTime());
-                java.sql.Date date = java.sql.Date.valueOf(dateString);
                 Record record = new Record(activityId, childrenIds, children.size(), date);
-                recordDataSource.addRecord(record);
+                if(isupdate == true){
+                    record.id = newRecord.id;
+                    recordDataSource.updateRecord(record);
+                }
+                else{
+                    recordDataSource.addRecord(record);
+                }
                 finish();
 
             }
         });
 
     }
-
-
 }

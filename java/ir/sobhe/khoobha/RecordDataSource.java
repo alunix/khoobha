@@ -38,42 +38,53 @@ public class RecordDataSource {
         dbHelper.close();
     }
 
-    public void addRecord(Record record){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    public void updateRecord(Record record){
         String[] columns = {DatabaseHelper.COLUMN_ID};
-        String whereClause = DatabaseHelper.COLUMN_DATE + " = " + dateFormat.format(record.date)
-                             + " AND " + DatabaseHelper.COLUMN_ACTIVITY_ID + " = " + record.activity_id;
+        String whereClause = DatabaseHelper.COLUMN_DATE + " = \"" + record.date +"\""
+                + " AND " + DatabaseHelper.COLUMN_ACTIVITY_ID + " = " + record.activity_id;
         Cursor cursor = database.query(DatabaseHelper.TABLE_RECORD,columns,whereClause,null,null,null,null);
-        if( cursor.getCount() == 0)
-        {
-            try{
-                ContentValues values = new ContentValues();
-                values.put(DatabaseHelper.COLUMN_ACTIVITY_ID, record.activity_id);
-                values.put(DatabaseHelper.COLUMN_CHILD_LIST, record.child_list);
-                values.put(DatabaseHelper.COLUMN_ITEMS, record.items);
-                values.put(DatabaseHelper.COLUMN_DATE, dateFormat.format(record.date));
-                record.id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+        cursor.moveToFirst();
+        long id = cursor.getLong(0);
+        try{
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.COLUMN_ACTIVITY_ID, record.activity_id);
+            values.put(DatabaseHelper.COLUMN_CHILD_LIST, record.child_list);
+            values.put(DatabaseHelper.COLUMN_ITEMS, record.items);
+            values.put(DatabaseHelper.COLUMN_DATE, record.date);
+            database.update(DatabaseHelper.TABLE_RECORD,values,DatabaseHelper.COLUMN_ID + " = " + id, null);
+            record.id = id;
         }
-        else{
-            cursor.moveToFirst();
-            long id = cursor.getLong(0);
-            try{
-                ContentValues values = new ContentValues();
-                values.put(DatabaseHelper.COLUMN_ACTIVITY_ID, record.activity_id);
-                values.put(DatabaseHelper.COLUMN_CHILD_LIST, record.child_list);
-                values.put(DatabaseHelper.COLUMN_ITEMS, record.items);
-                values.put(DatabaseHelper.COLUMN_DATE, dateFormat.format(record.date));
-                database.update(DatabaseHelper.TABLE_RECORD,values,DatabaseHelper.COLUMN_ID + " = " + id, null);
-                record.id = id;
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+        catch (Exception e){
+            e.printStackTrace();
         }
+    }
+
+    public Record getRecord(long activity_id, String date){
+        Record ret = null;
+        String whereClause = DatabaseHelper.COLUMN_DATE + " = \"" + date + "\""
+                + " AND " + DatabaseHelper.COLUMN_ACTIVITY_ID + " = " + activity_id;
+        Cursor cursor = database.query(DatabaseHelper.TABLE_RECORD,allColumns,whereClause,null,null,null,null);
+        cursor.moveToFirst();
+        if(!cursor.isAfterLast())
+            ret = cursorToRecord(cursor);
+
+        return ret;
+    }
+
+    public void addRecord(Record record){
+        try{
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.COLUMN_ACTIVITY_ID, record.activity_id);
+            values.put(DatabaseHelper.COLUMN_CHILD_LIST, record.child_list);
+            values.put(DatabaseHelper.COLUMN_ITEMS, record.items);
+            values.put(DatabaseHelper.COLUMN_DATE, record.date);
+            record.id = database.insert(DatabaseHelper.TABLE_RECORD, null, values);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public void deleteRecord(Record record){
@@ -82,7 +93,6 @@ public class RecordDataSource {
 
     public List<Record> getAllRecords(){
         List<Record> records = new ArrayList<Record>();
-
         Cursor cursor = database.query(DatabaseHelper.TABLE_RECORD,
                 allColumns, null, null, null, null, null);
 
@@ -98,6 +108,6 @@ public class RecordDataSource {
     }
 
     private Record cursorToRecord(Cursor cursor){
-        return new Record(cursor.getLong(0),cursor.getLong(1),cursor.getString(2),cursor.getInt(3), Date.valueOf(cursor.getString(4)));
+        return new Record(cursor.getLong(0),cursor.getLong(1),cursor.getString(2),cursor.getInt(3), cursor.getString(4));
     }
 }
