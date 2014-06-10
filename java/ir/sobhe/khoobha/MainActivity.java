@@ -2,6 +2,7 @@ package ir.sobhe.khoobha;
 
 import android.app.*;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -42,9 +43,6 @@ public class MainActivity extends android.app.Activity {
 
         dataSource = new ActivityDataSource(this);
         dataSource.open();
-        final SyncService s = new SyncService(this);
-
-        final Intent serviceIntent =  new Intent(this, SyncService.class);
 
 
         Button addActivityButton = (Button)findViewById(R.id.AddActivity);
@@ -81,13 +79,11 @@ public class MainActivity extends android.app.Activity {
                     Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(loginIntent);
                 }
-
-
-                s.sync();
-
-
-                //startService(serviceIntent);
-                //registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
+                Intent serviceIntent =  new Intent(MainActivity.this, SyncService.class);
+                ComponentName name = startService(serviceIntent);
+                if(name == null)
+                    Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
+                registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
             }
         });
 
@@ -97,10 +93,6 @@ public class MainActivity extends android.app.Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
-
-
-
         List<Activity> activities = new ArrayList<Activity>();
 
         try{
@@ -124,5 +116,17 @@ public class MainActivity extends android.app.Activity {
 
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //unregisterReceiver(reciever);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dataSource.close();
     }
 }

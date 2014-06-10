@@ -2,26 +2,21 @@ package ir.sobhe.khoobha;
 
 import android.app.*;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
@@ -39,22 +34,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.datatype.Duration;
-
 /**
  * Created by hadi on 14/5/10 AD.
  */
 public class SyncService extends IntentService {
 
-    private int result = Activity.RESULT_CANCELED;
+    private int serviceResult = Activity.RESULT_CANCELED;
     public static final String NOTIFICATION = "ir.sobhe.khoobha";
     private String groupId, email, password, synced_at;
     private String directory;
-    private Context context;
 
-    public SyncService(Context c){
+    public SyncService(){
         super("SyncService");
-        context = c;
 
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -72,16 +63,15 @@ public class SyncService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Toast.makeText(context, "سلام", Toast.LENGTH_LONG).show();
         sync();
 
         //when everything has been done
-        publishResult(result);
+        publishResult(serviceResult);
         stopSelf();
     }
 
     public void sync() {
-        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         Cursor cursor, cursor2;
 
@@ -151,8 +141,11 @@ public class SyncService extends IntentService {
         }
 
         // update synced_at
-        if (!last.isEmpty())
+        if (!last.isEmpty()){
             database.execSQL("update `group` set synced_at='"+ last +"'");
+            serviceResult = Activity.RESULT_OK;
+        }
+
 
         database.close();
         dbHelper.close();

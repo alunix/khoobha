@@ -64,9 +64,9 @@ public class RecordActivity extends android.app.Activity {
                     Child c = (Child)childrenListView.getItemAtPosition(i);
                     if(c.selected){
                         children.add(Long.toString(c.id));
-                        childrenIds += Long.toString(c.id);
-                        if(i != childrenListView.getCount() - 1)
+                        if (!childrenIds.isEmpty())
                             childrenIds += ",";
+                        childrenIds += Long.toString(c.id);
                     }
                 }
                 Record record = new Record(activityId, childrenIds, children.size(), date);
