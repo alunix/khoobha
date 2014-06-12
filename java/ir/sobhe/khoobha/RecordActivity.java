@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -18,6 +19,9 @@ public class RecordActivity extends android.app.Activity {
     private RecordDataSource recordDataSource;
     private String date;
     private boolean isupdate;
+    private Calendar c;
+    private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    private Record updatableRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,29 +36,35 @@ public class RecordActivity extends android.app.Activity {
 
         Intent intent = getIntent();
         final long activityId = intent.getLongExtra("activityId", 0);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
+        c = Calendar.getInstance();
         date = df.format(c.getTime());
 
-
-        List<Child> childrenList = childDataSource.getAllChildren();
-        final Record newRecord = recordDataSource.getRecord(activityId, date);
-        if(newRecord != null){
-            isupdate = true;
-            for(Child child : childrenList){
-                if(newRecord.child_list.contains(Long.toString(child.id)))
-                    child.selected = true;
-            }
-        }
-
+        updatableRecord = recordDataSource.getRecord(activityId, date);
+        List<Child> childrenList = checkSelectedChildren(updatableRecord);
         ChildrenAdapter adapter = new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()]));
         final ListView childrenListView = (ListView)findViewById(R.id.childrenList);
         childrenListView.setAdapter(adapter);
 
+
+        TextView txt_date = (TextView)findViewById(R.id.txt_date);
+        txt_date.setText(date);
+
+        Button btn_yesterday = (Button)findViewById(R.id.btn_yesterday);
+        btn_yesterday.setOnClickListener(new View.OnClickListener() {
+            TextView txt_date = (TextView)findViewById(R.id.txt_date);
+            @Override
+            public void onClick(View view) {
+                c.add(c.DATE, -1);
+                date = df.format(c.getTime());
+                txt_date.setText(date);
+                updatableRecord = recordDataSource.getRecord(activityId, date);
+                List<Child> childrenList = checkSelectedChildren(updatableRecord);
+                childrenListView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
+            }
+        });
+
+
         Button btn_ok = (Button)findViewById(R.id.btn_ok);
-
-
-
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,7 +81,7 @@ public class RecordActivity extends android.app.Activity {
                 }
                 Record record = new Record(activityId, childrenIds, children.size(), date);
                 if(isupdate == true){
-                    record.id = newRecord.id;
+                    record.id = updatableRecord.id;
                     recordDataSource.updateRecord(record);
                 }
                 else{
@@ -89,5 +99,17 @@ public class RecordActivity extends android.app.Activity {
         super.onDestroy();
         recordDataSource.close();
         childDataSource.close();
+    }
+
+    private List<Child> checkSelectedChildren(Record newRecord){
+        List<Child> childrenList = childDataSource.getAllChildren();
+        if(newRecord != null){
+            isupdate = true;
+            for(Child child : childrenList){
+                if(newRecord.child_list.contains(Long.toString(child.id)))
+                    child.selected = true;
+            }
+        }
+        return childrenList;
     }
 }
