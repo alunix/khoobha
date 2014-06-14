@@ -21,7 +21,7 @@ public class ChildrenAdapter extends ArrayAdapter<Child> {
     private final Child[] values;
 
     public ChildrenAdapter(Context context, Child[] values){
-        super(context, R.layout.childrenlist_layout, values);
+        super(context, R.layout.recordlist_layout, values);
         this.context = context;
         this.values = values;
     }
@@ -37,7 +37,7 @@ public class ChildrenAdapter extends ArrayAdapter<Child> {
         View rowView = null;
         if(convertView == null){
             LayoutInflater inflater =  (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.childrenlist_layout, parent, false);
+            rowView = inflater.inflate(R.layout.recordlist_layout, parent, false);
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.text = (TextView)rowView.findViewById(R.id.childName);
             viewHolder.image = (ImageView)rowView.findViewById(R.id.childPicture);

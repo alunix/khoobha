@@ -22,7 +22,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="عضو جدید"
+        android:text="مدیریت اعضا"
         android:id="@+id/AddChild"
         android:layout_alignTop="@+id/sync"
         android:layout_alignParentRight="true"

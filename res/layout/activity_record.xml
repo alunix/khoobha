@@ -37,11 +37,23 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="دیروز"
+        android:text="روز قبل"
         android:id="@+id/btn_yesterday"
         android:layout_centerHorizontal="true"
         android:layout_alignBaseline="@+id/txt_date"
-        android:layout_toLeftOf="@+id/txt_date" />
+        android:layout_toLeftOf="@+id/txt_date"
+        android:textSize="18dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="روز بعد"
+        android:id="@+id/btn_nextDay"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/txt_date"
+        android:layout_alignBaseline="@+id/txt_date"
+        android:visibility="invisible"
+        android:textSize="18dp" />
 
 
 </RelativeLayout>

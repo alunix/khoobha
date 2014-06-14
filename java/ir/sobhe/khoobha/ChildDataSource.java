@@ -48,6 +48,20 @@ public class ChildDataSource {
         }
     }
 
+    public Child getChild(long childId){
+        Child ret = null;
+
+        Cursor cursor = database.query(DatabaseHelper.TABLE_CHILD,
+                allColumns, "id = " + childId, null, null, null, null);
+
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast())
+            ret = cursorToChild(cursor);
+
+        cursor.close();
+        return ret;
+    }
+
     public void deleteChild(Child child){
         database.delete(DatabaseHelper.TABLE_CHILD, DatabaseHelper.COLUMN_ID + " = " + child.id, null);
     }
@@ -74,7 +88,10 @@ public class ChildDataSource {
         values.put(DatabaseHelper.COLUMN_ID, child.id);
         values.put(DatabaseHelper.COLUMN_NAME, child.name);
         values.put(DatabaseHelper.COLUMN_IMAGE, child.imageName);
-        return database.update(DatabaseHelper.TABLE_CHILD,values, DatabaseHelper.COLUMN_ID + "=" + child.id, null) > 0;
+        boolean result = database.update(DatabaseHelper.TABLE_CHILD,values, DatabaseHelper.COLUMN_ID + "=" + child.id, null) > 0;
+        if( result == true)
+            Logger.log(database, DatabaseHelper.TABLE_CHILD, Logger.OPERATIONS.UPDATE, child.id);
+        return result;
     }
 
     private Child cursorToChild(Cursor cursor){

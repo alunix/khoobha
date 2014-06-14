@@ -40,9 +40,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
-        <service
-            android:name=".SyncService">
-            </service>
+
+        <service android:name="ir.sobhe.khoobha.SyncService" >
+        </service>
+
+        <activity
+            android:name="ir.sobhe.khoobha.ChildrenListActivity"
+            android:label="@string/title_activity_children_list" >
+        </activity>
     </application>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->

@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,11 +22,13 @@ public class RecordActivity extends android.app.Activity {
     private Calendar c;
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private Record updatableRecord;
+    private Date today;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+
 
         childDataSource = new ChildDataSource(this);
         childDataSource.open();
@@ -38,6 +40,7 @@ public class RecordActivity extends android.app.Activity {
         final long activityId = intent.getLongExtra("activityId", 0);
         c = Calendar.getInstance();
         date = df.format(c.getTime());
+        today = c.getTime();
 
         updatableRecord = recordDataSource.getRecord(activityId, date);
         List<Child> childrenList = checkSelectedChildren(updatableRecord);
@@ -49,15 +52,38 @@ public class RecordActivity extends android.app.Activity {
         TextView txt_date = (TextView)findViewById(R.id.txt_date);
         txt_date.setText(date);
 
-        Button btn_yesterday = (Button)findViewById(R.id.btn_yesterday);
+        final Button btn_yesterday = (Button)findViewById(R.id.btn_yesterday);
+        final Button btn_nextDay = (Button)findViewById(R.id.btn_nextDay);
+
         btn_yesterday.setOnClickListener(new View.OnClickListener() {
             TextView txt_date = (TextView)findViewById(R.id.txt_date);
             @Override
             public void onClick(View view) {
+                if(btn_nextDay.getVisibility() == View.INVISIBLE)
+                    btn_nextDay.setVisibility(View.VISIBLE);
                 c.add(c.DATE, -1);
                 date = df.format(c.getTime());
                 txt_date.setText(date);
                 updatableRecord = recordDataSource.getRecord(activityId, date);
+                if(updatableRecord == null)
+                    isupdate = false;
+                List<Child> childrenList = checkSelectedChildren(updatableRecord);
+                childrenListView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
+            }
+        });
+
+        btn_nextDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView txt_date = (TextView)findViewById(R.id.txt_date);
+                c.add(c.DATE, +1);
+                date = df.format(c.getTime());
+                txt_date.setText(date);
+                if(today.equals(c.getTime()))
+                    btn_nextDay.setVisibility(View.INVISIBLE);
+                updatableRecord = recordDataSource.getRecord(activityId, date);
+                if(updatableRecord == null)
+                    isupdate = false;
                 List<Child> childrenList = checkSelectedChildren(updatableRecord);
                 childrenListView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
             }

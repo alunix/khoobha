@@ -57,14 +57,14 @@ public class MainActivity extends android.app.Activity {
             }
         });
 
-        Button addChildButton = (Button)findViewById(R.id.AddChild);
+        Button childrenListButton = (Button)findViewById(R.id.AddChild);
 
-        addChildButton.setOnClickListener(new View.OnClickListener() {
+        childrenListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //go to adding new child page
-                Intent addChildIntent = new Intent(MainActivity.this, AddChildActivity.class);
-                startActivity(addChildIntent);
+                Intent childrenListIntent = new Intent(MainActivity.this, ChildrenListActivity.class);
+                startActivity(childrenListIntent);
             }
         });
 
