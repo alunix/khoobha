@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -39,6 +40,7 @@ import java.util.List;
  */
 public class SyncService extends IntentService {
 
+    public static final int RESULT_ERROR = 29;
     private int serviceResult = Activity.RESULT_CANCELED;
     public static final String NOTIFICATION = "ir.sobhe.khoobha";
     private String groupId, email, password, synced_at;
@@ -95,7 +97,6 @@ public class SyncService extends IntentService {
             table = cursor.getString(0);
             id = cursor.getString(1);
             operation = cursor.getString(2);
-            last = cursor.getString(3);
 
             cursor2 = database.rawQuery("select * from "+ table +" where id = "+ id, null);
             cursor2.moveToFirst();
@@ -122,30 +123,34 @@ public class SyncService extends IntentService {
             } else
                 continue;
 
-            if (operation.equals("insert"))
-                result = send(new HttpPost("http://khoobha.net/api/" + url), args, filename);
-            else if (operation.equals("update"))
-                result = send(new HttpPut("http://khoobha.net/api/" + url + id + "/"), args, filename);
-            else
-                continue;
+            try {
+                if (operation.equals("insert"))
+                    result = send(new HttpPost("http://khoobha.net/api/" + url), args, filename);
+                else if (operation.equals("update"))
+                    result = send(new HttpPut("http://khoobha.net/api/" + url + id + "/"), args, filename);
+                else
+                    continue;
 
-            if (operation.equals("insert")) {
-                try {
+                if (operation.equals("insert"))
                     updateId(database, table, id, result.getString("id"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
+            } catch (Exception e){
+                e.printStackTrace();
+                serviceResult = RESULT_ERROR;
+                break;
             }
 
+            last = cursor.getString(3);
             cursor.moveToNext();
         }
 
         // update synced_at
-        if (!last.isEmpty()){
+        if (!last.isEmpty()) {
             database.execSQL("update `group` set synced_at='"+ last +"'");
-            serviceResult = Activity.RESULT_OK;
-        }
 
+            if (cursor.isAfterLast() && serviceResult != RESULT_ERROR)
+                serviceResult = Activity.RESULT_OK;
+        }
 
         database.close();
         dbHelper.close();
@@ -162,7 +167,7 @@ public class SyncService extends IntentService {
     }
 
 
-    private JSONObject send(HttpEntityEnclosingRequestBase request, List<NameValuePair> args, String filename) {
+    private JSONObject send(HttpEntityEnclosingRequestBase request, List<NameValuePair> args, String filename) throws IOException, JSONException {
         // authentication
         try {
             request.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(email, password), request));
@@ -187,16 +192,8 @@ public class SyncService extends IntentService {
 
         // send
         HttpClient client = new DefaultHttpClient();
-        try {
-            HttpResponse response = client.execute(request);
-            //Toast.makeText(this, EntityUtils.toString(response.getEntity()),1000).show();
-            return new JSONObject(EntityUtils.toString(response.getEntity()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        return new JSONObject();
+        HttpResponse response = client.execute(request);
+        return new JSONObject(EntityUtils.toString(response.getEntity()));
     }
 }

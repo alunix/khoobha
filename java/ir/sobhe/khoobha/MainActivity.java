@@ -32,7 +32,12 @@ public class MainActivity extends android.app.Activity {
                 int result = bundle.getInt("result");
                 if(result == RESULT_OK)
                     Toast.makeText(MainActivity.this, "به روز رسانی با موفقیت انجام شد.", Toast.LENGTH_LONG).show();
+                else if(result == SyncService.RESULT_ERROR)
+                    Toast.makeText(MainActivity.this, "خطا در هنگام به روز رسانی", Toast.LENGTH_LONG).show();
             }
+
+            Button syncButton = (Button)findViewById(R.id.sync);
+            syncButton.setEnabled(true);
         }
     };
 
@@ -68,21 +73,19 @@ public class MainActivity extends android.app.Activity {
             }
         });
 
-        Button syncBytton = (Button)findViewById(R.id.sync);
+        final Button syncBytton = (Button)findViewById(R.id.sync);
         syncBytton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                 boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
                 if(!previouslyStarted){
-
                     Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(loginIntent);
                 }
+                syncBytton.setEnabled(false);
                 Intent serviceIntent =  new Intent(MainActivity.this, SyncService.class);
                 ComponentName name = startService(serviceIntent);
-                if(name == null)
-                    Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_LONG).show();
                 registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
             }
         });

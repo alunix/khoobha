@@ -1,5 +1,6 @@
 package ir.sobhe.khoobha;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -82,6 +83,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "options text null default null" +
             ");";
 
+
+
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -94,6 +97,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(RECORD_CREATE);
             sqLiteDatabase.execSQL(LOGS_CREATE);
             sqLiteDatabase.execSQL(GROUP_CREATE);
+
+            //add default activities
+            Activity[] activities = new Activity[5];
+            activities[0] = new Activity(13,"نماز صبح",3);
+            activities[1] = new Activity(12, "نماز ظهر", 1);
+            activities[2] = new Activity(2, "نماز مغرب", 1);
+            activities[3] = new Activity(6,"اذان", 1);
+            activities[4] = new Activity(5, "تکبیر", 1);
+
+            for ( Activity activity : activities){
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_ID, activity.id);
+                values.put(COLUMN_TITLE, activity.title);
+                values.put(COLUMN_POINTS, activity.points);
+                sqLiteDatabase.insert(TABLE_ACTIVITY, null, values);
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
