@@ -21,6 +21,7 @@ public class AddActivityActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addactivity);
         ((EditText)findViewById(R.id.txt_points)).setHint("1 ");
+        getActionBar().setTitle("فعالیت جدید");
 
         dataSource = new ActivityDataSource(this);
 

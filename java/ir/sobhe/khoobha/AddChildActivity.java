@@ -30,6 +30,8 @@ public class AddChildActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_child);
+        getActionBar().setTitle("ثبت نام");
+
         dataSource = new ChildDataSource(this);
         final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         child = new Child();

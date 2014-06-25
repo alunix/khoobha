@@ -29,7 +29,6 @@ public class RecordActivity extends android.app.Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
-
         childDataSource = new ChildDataSource(this);
         childDataSource.open();
 
@@ -37,6 +36,7 @@ public class RecordActivity extends android.app.Activity {
         recordDataSource.open();
 
         Intent intent = getIntent();
+        getActionBar().setTitle(intent.getStringExtra("activityTitle"));
         final long activityId = intent.getLongExtra("activityId", 0);
         c = Calendar.getInstance();
         date = df.format(c.getTime());

@@ -46,6 +46,7 @@ public class MainActivity extends android.app.Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getActionBar().setTitle("خوب‌ها");
 
         dataSource = new ActivityDataSource(this);
         dataSource.open();
@@ -114,6 +115,7 @@ public class MainActivity extends android.app.Activity {
                 //go to scoring page for selected activity
                 Intent recordIntent = new Intent(MainActivity.this, RecordActivity.class);
                 recordIntent.putExtra("activityId", ((Activity)listView.getItemAtPosition(position)).id);
+                recordIntent.putExtra("activityTitle", ((Activity)listView.getItemAtPosition(position)).title);
                 startActivity(recordIntent);
 
             }
