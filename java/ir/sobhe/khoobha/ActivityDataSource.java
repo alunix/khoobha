@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ActivityDataSource {
 
-    private SQLiteDatabase database;
+    public SQLiteDatabase database;
     private DatabaseHelper dbHelper;
     private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_TITLE, DatabaseHelper.COLUMN_POINTS};
     private SharedPreferences prefs;

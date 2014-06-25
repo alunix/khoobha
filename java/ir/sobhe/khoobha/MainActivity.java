@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -77,20 +78,18 @@ public class MainActivity extends android.app.Activity {
         syncBytton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                boolean previouslyStarted = prefs.getBoolean(getString(R.string.pref_previously_started), false);
-                if(!previouslyStarted){
+                Cursor cursor = dataSource.database.rawQuery("select * from `group`", null);
+                if (cursor.getCount() <= 0) {
                     Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(loginIntent);
                 }
+
                 syncBytton.setEnabled(false);
                 Intent serviceIntent =  new Intent(MainActivity.this, SyncService.class);
                 ComponentName name = startService(serviceIntent);
                 registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
             }
         });
-
-
     }
 
     @Override
