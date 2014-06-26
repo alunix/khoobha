@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -37,8 +38,8 @@ public class MainActivity extends android.app.Activity {
                     Toast.makeText(MainActivity.this, "خطا در هنگام به روز رسانی", Toast.LENGTH_LONG).show();
             }
 
-            Button syncButton = (Button)findViewById(R.id.sync);
-            syncButton.setEnabled(true);
+            setProgressBarIndeterminateVisibility(false);
+            // todo: visible sync menu
         }
     };
 
@@ -47,39 +48,31 @@ public class MainActivity extends android.app.Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getActionBar().setTitle("خوب‌ها");
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         dataSource = new ActivityDataSource(this);
         dataSource.open();
 
 
-        Button addActivityButton = (Button)findViewById(R.id.AddActivity);
+        Button addActivityButton = (Button) findViewById(R.id.AddActivity);
 
         addActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //go to adding new activity page
-                Intent addActivityIntent = new Intent(MainActivity.this, AddActivityActivity.class);
-                startActivity(addActivityIntent);
+                startActivity(new Intent(MainActivity.this, AddActivityActivity.class));
             }
         });
+    }
 
+    private void syncData() {
+        Cursor cursor = dataSource.database.rawQuery("select * from `group`", null);
+        if (cursor.getCount() <= 0) {
+            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+        }
 
-        final Button syncBytton = (Button)findViewById(R.id.sync);
-        syncBytton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Cursor cursor = dataSource.database.rawQuery("select * from `group`", null);
-                if (cursor.getCount() <= 0) {
-                    Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(loginIntent);
-                }
-
-                syncBytton.setEnabled(false);
-                Intent serviceIntent =  new Intent(MainActivity.this, SyncService.class);
-                ComponentName name = startService(serviceIntent);
-                registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
-            }
-        });
+        startService(new Intent(MainActivity.this, SyncService.class));
+        registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
     }
 
     @Override
@@ -106,7 +99,6 @@ public class MainActivity extends android.app.Activity {
                 recordIntent.putExtra("activityId", ((Activity)listView.getItemAtPosition(position)).id);
                 recordIntent.putExtra("activityTitle", ((Activity)listView.getItemAtPosition(position)).title);
                 startActivity(recordIntent);
-
             }
         });
     }
@@ -122,6 +114,11 @@ public class MainActivity extends android.app.Activity {
         switch (item.getItemId()) {
             case R.id.action_children:
                 startActivity(new Intent(MainActivity.this, ChildrenListActivity.class));
+                return true;
+            case R.id.action_sync:
+                item.setVisible(false);
+                setProgressBarIndeterminateVisibility(true);
+                syncData();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

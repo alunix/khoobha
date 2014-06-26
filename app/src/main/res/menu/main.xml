@@ -2,7 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ir.sobhe.khoobha.MainActivity" >
-    
+
+    <item android:id="@+id/action_sync"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="ارسال"
+        android:showAsAction="always" />
+
     <item android:id="@+id/action_children"
         android:icon="@drawable/ic_action_group"
         android:title="بچه‌ها"
