@@ -6,9 +6,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_add">AddActivityActivity</string>
     <string name="title_activity_add_child">AddChildActivity</string>
-    <string name="pref_previously_started">false</string>
     <string name="title_activity_record">RecordActivity</string>
     <string name="title_activity_edit_child">editChildActivity</string>
     <string name="title_activity_children_list">ChildrenListActivity</string>
+    <string name="pref_previously_registered">false</string>
 
 </resources>
