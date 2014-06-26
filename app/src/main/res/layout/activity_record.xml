@@ -1,21 +1,51 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="ir.sobhe.khoobha.RecordActivity">
+    tools:context="ir.sobhe.khoobha.RecordActivity"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="09-06-2014"
-        android:id="@+id/txt_date"
-        android:textSize="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:background="@drawable/abc_ab_bottom_solid_dark_holo">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="روز قبل"
+            android:id="@+id/btn_yesterday"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBaseline="@+id/txt_date"
+            android:layout_toLeftOf="@+id/txt_date"
+            android:textSize="18dp"
+            android:textColor="#fff"
+            style="@style/Widget.AppCompat.ActionButton"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="روز بعد"
+            android:id="@+id/btn_nextDay"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/txt_date"
+            android:layout_alignBaseline="@+id/txt_date"
+            android:textSize="18dp"
+            android:textColor="#fff"
+            style="@style/Widget.AppCompat.ActionButton"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="پنجشنبه، 5 تیر"
+            android:id="@+id/txt_date"
+            android:textSize="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#fff" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/childrenList"
@@ -23,28 +53,7 @@
         android:layout_height="wrap_content"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/btn_yesterday"></ListView>
+        android:layout_below="@+id/btn_yesterday"
+        android:paddingTop="5dp"></ListView>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="«"
-        android:id="@+id/btn_yesterday"
-        android:layout_centerHorizontal="true"
-        android:layout_alignBaseline="@+id/txt_date"
-        android:layout_toLeftOf="@+id/txt_date"
-        android:textSize="18dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="»"
-        android:id="@+id/btn_nextDay"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/txt_date"
-        android:layout_alignBaseline="@+id/txt_date"
-        android:visibility="invisible"
-        android:textSize="18dp" />
-
-
-</RelativeLayout>
+</LinearLayout>

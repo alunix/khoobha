@@ -59,6 +59,7 @@ public class RecordActivity extends android.app.Activity {
 
         final Button btn_yesterday = (Button)findViewById(R.id.btn_yesterday);
         final Button btn_nextDay = (Button)findViewById(R.id.btn_nextDay);
+        btn_nextDay.setVisibility(View.INVISIBLE);
 
         btn_yesterday.setOnClickListener(new View.OnClickListener() {
             TextView txt_date = (TextView)findViewById(R.id.txt_date);
@@ -69,7 +70,7 @@ public class RecordActivity extends android.app.Activity {
                 c.add(c.DATE, -1);
                 date = df.format(c.getTime());
                 ShamsiCalendar shamsiCalendar = new ShamsiCalendar(c.getTime());
-                String shamsiDate = String.format("%s %d %s",shamsiCalendar.strWeekDay,shamsiCalendar.date, shamsiCalendar.strMonth);
+                String shamsiDate = String.format("%s، %d %s",shamsiCalendar.strWeekDay,shamsiCalendar.date, shamsiCalendar.strMonth);
                 txt_date.setText(shamsiDate);
                 updatableRecord = recordDataSource.getRecord(activityId, date);
                 if(updatableRecord == null)
