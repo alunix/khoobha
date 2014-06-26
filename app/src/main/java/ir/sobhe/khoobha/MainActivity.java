@@ -25,6 +25,7 @@ import java.util.List;
 public class MainActivity extends android.app.Activity {
 
     private ActivityDataSource dataSource;
+    private MenuItem syncItem;
 
     private BroadcastReceiver reciever = new BroadcastReceiver() {
         @Override
@@ -39,7 +40,7 @@ public class MainActivity extends android.app.Activity {
             }
 
             setProgressBarIndeterminateVisibility(false);
-            // todo: visible sync menu
+            syncItem.setVisible(true);
         }
     };
 
@@ -66,28 +67,27 @@ public class MainActivity extends android.app.Activity {
     }
 
     private void syncData() {
+        syncItem.setVisible(false);
+        setProgressBarIndeterminateVisibility(true);
+
+        startService(new Intent(MainActivity.this, SyncService.class));
+        registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
+    }
+
+    private void syncAction() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean previouslyRegistered = prefs.getBoolean(getString(R.string.pref_previously_registered), false);
-        if(!previouslyRegistered){
+        if (!previouslyRegistered)
             startActivityForResult(new Intent(MainActivity.this, LoginActivity.class), 201);
-        }
         else
-        {
-            startService(new Intent(MainActivity.this, SyncService.class));
-            registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
-        }
-
+            syncData();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 201){
-            if(resultCode == 200){
-                startService(new Intent(MainActivity.this, SyncService.class));
-                registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
-            }
-        }
+        if (requestCode == 201 && resultCode == 200)
+            syncData();
     }
 
     @Override
@@ -95,10 +95,10 @@ public class MainActivity extends android.app.Activity {
         super.onResume();
         List<Activity> activities = new ArrayList<Activity>();
 
-        try{
+        try {
             activities = dataSource.getAllActivities();
         }
-        catch (Exception e){
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -121,6 +121,7 @@ public class MainActivity extends android.app.Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        syncItem = menu.findItem(R.id.action_sync);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -131,9 +132,7 @@ public class MainActivity extends android.app.Activity {
                 startActivity(new Intent(MainActivity.this, ChildrenListActivity.class));
                 return true;
             case R.id.action_sync:
-                item.setVisible(false);
-                setProgressBarIndeterminateVisibility(true);
-                syncData();
+                syncAction();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
