@@ -46,9 +46,9 @@ public class MainActivity extends android.app.Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
         getActionBar().setTitle("خوب‌ها");
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         dataSource = new ActivityDataSource(this);
         dataSource.open();
