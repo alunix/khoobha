@@ -2,6 +2,8 @@ package ir.sobhe.khoobha;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -23,6 +25,8 @@ public class RecordActivity extends android.app.Activity {
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private Record updatableRecord;
     private Date today;
+    private long activityId;
+    private ListView childrenListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,7 @@ public class RecordActivity extends android.app.Activity {
 
         Intent intent = getIntent();
         getActionBar().setTitle(intent.getStringExtra("activityTitle"));
-        final long activityId = intent.getLongExtra("activityId", 0);
+        activityId = intent.getLongExtra("activityId", 0);
         c = Calendar.getInstance();
         date = df.format(c.getTime());
         today = c.getTime();
@@ -45,9 +49,8 @@ public class RecordActivity extends android.app.Activity {
         updatableRecord = recordDataSource.getRecord(activityId, date);
         List<Child> childrenList = checkSelectedChildren(updatableRecord);
         ChildrenAdapter adapter = new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()]));
-        final ListView childrenListView = (ListView)findViewById(R.id.childrenList);
+        childrenListView = (ListView)findViewById(R.id.childrenList);
         childrenListView.setAdapter(adapter);
-
 
         TextView txt_date = (TextView)findViewById(R.id.txt_date);
         txt_date.setText(date);
@@ -88,36 +91,46 @@ public class RecordActivity extends android.app.Activity {
                 childrenListView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
             }
         });
+    }
 
-
-        Button btn_ok = (Button)findViewById(R.id.btn_ok);
-        btn_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<String> children = new ArrayList<String>();
-                String childrenIds = "";
-                for(int i= 0 ; i < childrenListView.getCount(); i++){
-                    Child c = (Child)childrenListView.getItemAtPosition(i);
-                    if(c.selected){
-                        children.add(Long.toString(c.id));
-                        if (!childrenIds.isEmpty())
-                            childrenIds += ",";
-                        childrenIds += Long.toString(c.id);
-                    }
-                }
-                Record record = new Record(activityId, childrenIds, children.size(), date);
-                if(isupdate == true){
-                    record.id = updatableRecord.id;
-                    recordDataSource.updateRecord(record);
-                }
-                else{
-                    recordDataSource.addRecord(record);
-                }
-                finish();
-
+    private void saveRecord() {
+        List<String> children = new ArrayList<String>();
+        String childrenIds = "";
+        for(int i= 0 ; i < childrenListView.getCount(); i++){
+            Child c = (Child)childrenListView.getItemAtPosition(i);
+            if(c.selected){
+                children.add(Long.toString(c.id));
+                if (!childrenIds.isEmpty())
+                    childrenIds += ",";
+                childrenIds += Long.toString(c.id);
             }
-        });
+        }
+        Record record = new Record(activityId, childrenIds, children.size(), date);
+        if(isupdate == true){
+            record.id = updatableRecord.id;
+            recordDataSource.updateRecord(record);
+        }
+        else{
+            recordDataSource.addRecord(record);
+        }
+        finish();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.record, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                saveRecord();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

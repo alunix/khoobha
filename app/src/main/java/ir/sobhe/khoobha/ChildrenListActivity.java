@@ -25,17 +25,23 @@ public class ChildrenListActivity extends android.app.Activity {
 
         childDataSource = new ChildDataSource(this);
         childDataSource.open();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.children_list, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-        Button addChild = (Button)findViewById(R.id.childrenList_btn_addChild);
-
-        addChild.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ChildrenListActivity.this, AddChildActivity.class);
-                startActivity(intent);
-            }
-        });
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_register:
+                startActivity(new Intent(ChildrenListActivity.this, AddChildActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -45,8 +51,6 @@ public class ChildrenListActivity extends android.app.Activity {
         ChildrenListAdapter adapter = new ChildrenListAdapter(this, childList.toArray(new Child[childList.size()]));
         ListView childrenListView = (ListView)findViewById(R.id.childrenList);
         childrenListView.setAdapter(adapter);
-
-
     }
 
     @Override

@@ -28,15 +28,6 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="تایید"
-        android:id="@+id/btn_ok"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="روز قبل"
         android:id="@+id/btn_yesterday"
         android:layout_centerHorizontal="true"

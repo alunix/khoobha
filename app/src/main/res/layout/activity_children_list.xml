@@ -17,7 +17,7 @@
         android:layout_below="@+id/btn_yesterday"
         android:layout_above="@+id/childrenList_btn_addChild"></ListView>
 
-    <Button
+    Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="عضو جدید"

@@ -36,18 +36,16 @@ public class AddChildActivity extends ActionBarActivity {
         final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         child = new Child();
         dataSource.open();
-        imageView = (ImageView)findViewById(R.id.img_child);
-        final EditText txt_childName = (EditText)findViewById(R.id.txt_childName);
+        imageView = (ImageView) findViewById(R.id.img_child);
+        final EditText txt_childName = (EditText) findViewById(R.id.txt_childName);
         Intent intent = getIntent();
         isEdit = intent.getBooleanExtra("editChild", false);
-        if (isEdit)
-        {
+        if (isEdit) {
             long childId = intent.getLongExtra("childId", 0);
             child = dataSource.getChild(childId);
             imageView.setImageBitmap(BitmapFactory.decodeFile(Child.DIR_PATH + child.imageName));
             txt_childName.setText(child.name);
-        }
-        else{
+        } else {
             txt_childName.setHint("نام");
             startActivityForResult(cameraIntent, CAMERA_REQUEST);
         }
@@ -59,42 +57,60 @@ public class AddChildActivity extends ActionBarActivity {
             }
         });
 
-
-
         Button btn_saveChild = (Button)findViewById(R.id.btn_saveChild);
-
         btn_saveChild.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FileOutputStream out = null;
-                Bitmap photo = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-                EditText txt_childName = (EditText)findViewById(R.id.txt_childName);
-                child.image = photo;
-                child.imageName = Long.toString(System.currentTimeMillis())+".png";
-                child.name = txt_childName.getText().toString();
-                if(child.name == "نام")
-                    child.name = null;
-                try {
-                    File dir = new File(Child.DIR_PATH);
-                    dir.mkdirs();
-                    out = new FileOutputStream(new File(dir, child.imageName));
-                    photo.compress(Bitmap.CompressFormat.PNG, 90, out);
-                } catch (Exception e) {
-                    child.imageName = "";
-                    e.printStackTrace();
-                } finally {
-                    try{
-                        out.close();
-                    } catch(Throwable ignore) {}
-                }
-
-                if(isEdit)
-                    dataSource.updateChild(child);
-                else
-                    dataSource.addChild(child);
-                finish();
+                saveChild();
             }
         });
+    }
+
+    private void saveChild() {
+        FileOutputStream out = null;
+        Bitmap photo = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+        EditText txt_childName = (EditText)findViewById(R.id.txt_childName);
+        child.image = photo;
+        child.imageName = Long.toString(System.currentTimeMillis())+".png";
+        child.name = txt_childName.getText().toString();
+        if(child.name == "نام")
+            child.name = null;
+        try {
+            File dir = new File(Child.DIR_PATH);
+            dir.mkdirs();
+            out = new FileOutputStream(new File(dir, child.imageName));
+            photo.compress(Bitmap.CompressFormat.PNG, 90, out);
+        } catch (Exception e) {
+            child.imageName = "";
+            e.printStackTrace();
+        } finally {
+            try{
+                out.close();
+            } catch(Throwable ignore) {}
+        }
+
+        if(isEdit)
+            dataSource.updateChild(child);
+        else
+            dataSource.addChild(child);
+        finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_child, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                saveChild();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -105,8 +121,4 @@ public class AddChildActivity extends ActionBarActivity {
         else
             finish();
     }
-
-
-
 }
-

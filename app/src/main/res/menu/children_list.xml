@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ir.sobhe.khoobha.ChildrenListActivity" >
     
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+    <item android:id="@+id/action_register"
+        android:icon="@drawable/ic_action_add_person"
+        android:title="ثبت نام"
+        android:showAsAction="always" />
 </menu>

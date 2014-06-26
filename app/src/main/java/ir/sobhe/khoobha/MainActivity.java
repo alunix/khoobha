@@ -54,7 +54,6 @@ public class MainActivity extends android.app.Activity {
 
         Button addActivityButton = (Button)findViewById(R.id.AddActivity);
 
-
         addActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,16 +63,6 @@ public class MainActivity extends android.app.Activity {
             }
         });
 
-        Button childrenListButton = (Button)findViewById(R.id.AddChild);
-
-        childrenListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //go to adding new child page
-                Intent childrenListIntent = new Intent(MainActivity.this, ChildrenListActivity.class);
-                startActivity(childrenListIntent);
-            }
-        });
 
         final Button syncBytton = (Button)findViewById(R.id.sync);
         syncBytton.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +109,23 @@ public class MainActivity extends android.app.Activity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_children:
+                startActivity(new Intent(MainActivity.this, ChildrenListActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
