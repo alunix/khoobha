@@ -84,16 +84,6 @@ public class LoginActivity extends Activity {
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
 
         mTitleView = (EditText)findViewById(R.id.txt_groupName);
 
@@ -187,6 +177,7 @@ public class LoginActivity extends Activity {
                         edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
                         edit.putInt("groupId", group);
                         edit.commit();
+                        setResult(200);
                         finish();
                     }
                 }

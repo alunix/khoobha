@@ -66,13 +66,19 @@ public class MainActivity extends android.app.Activity {
 
     private void syncData() {
         Cursor cursor = dataSource.database.rawQuery("select * from `group`", null);
-        if (cursor.getCount() <= 0) {
-            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(loginIntent);
-        }
+        if (cursor.getCount() <= 0)
+            startActivityForResult(new Intent(MainActivity.this, LoginActivity.class), 201);
+    }
 
-        startService(new Intent(MainActivity.this, SyncService.class));
-        registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 201){
+            if(resultCode == 200){
+                startService(new Intent(MainActivity.this, SyncService.class));
+                registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
+            }
+        }
     }
 
     @Override
