@@ -174,7 +174,7 @@ public class LoginActivity extends Activity {
                         groupDataSource.addGroup(new Group(group, title, email,password));
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                         SharedPreferences.Editor edit = prefs.edit();
-                        edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
+                        edit.putBoolean(getString(R.string.pref_previously_registered), Boolean.TRUE);
                         edit.putInt("groupId", group);
                         edit.commit();
                         setResult(200);

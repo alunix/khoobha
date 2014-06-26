@@ -65,9 +65,11 @@ public class MainActivity extends android.app.Activity {
     }
 
     private void syncData() {
-        Cursor cursor = dataSource.database.rawQuery("select * from `group`", null);
-        if (cursor.getCount() <= 0)
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean previouslyRegistered = prefs.getBoolean(getString(R.string.pref_previously_registered), false);
+        if(!previouslyRegistered){
             startActivityForResult(new Intent(MainActivity.this, LoginActivity.class), 201);
+        }
         else
         {
             startService(new Intent(MainActivity.this, SyncService.class));
