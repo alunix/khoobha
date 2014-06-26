@@ -53,9 +53,9 @@ public class MainActivity extends android.app.Activity {
         dataSource = new ActivityDataSource(this);
         dataSource.open();
 
+        setProgressBarIndeterminateVisibility(false);
 
         Button addActivityButton = (Button) findViewById(R.id.AddActivity);
-
         addActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +68,12 @@ public class MainActivity extends android.app.Activity {
         Cursor cursor = dataSource.database.rawQuery("select * from `group`", null);
         if (cursor.getCount() <= 0)
             startActivityForResult(new Intent(MainActivity.this, LoginActivity.class), 201);
+        else
+        {
+            startService(new Intent(MainActivity.this, SyncService.class));
+            registerReceiver(reciever, new IntentFilter(SyncService.NOTIFICATION));
+        }
+
     }
 
     @Override

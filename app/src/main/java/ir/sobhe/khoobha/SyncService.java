@@ -99,6 +99,7 @@ public class SyncService extends IntentService {
             operation = cursor.getString(2);
 
             cursor2 = database.rawQuery("select * from "+ table +" where id = "+ id, null);
+            if (cursor2.getCount() > 0) {
             cursor2.moveToFirst();
 
             args.clear();
@@ -138,6 +139,7 @@ public class SyncService extends IntentService {
                 e.printStackTrace();
                 serviceResult = RESULT_ERROR;
                 break;
+            }
             }
 
             last = cursor.getString(3);
