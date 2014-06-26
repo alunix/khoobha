@@ -78,6 +78,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "image varchar(50) null default null, " +
             "version varchar(10) null default null, " +
             "synced_at timestamp null default null, " +
+            //"received_at timestamp null default null, " +
             "assistant_email varchar(50) null default null, " +
             "assistant_password varchar(50) null default null, " +
             "options text null default null" +
@@ -121,10 +122,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
-        Log.w(DatabaseHelper.class.getName(),
-                "Upgrading database from version " + i + " to" + i2
-                + ", which will destroy all old data");
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_CHILD + ", " + TABLE_RECORD + ", " + TABLE_ACTIVITY);
-        onCreate(sqLiteDatabase);
+        if (i == 1 && i2 == 2) {
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_CHILD + ", " + TABLE_RECORD + ", " + TABLE_ACTIVITY);
+        }
     }
 }
