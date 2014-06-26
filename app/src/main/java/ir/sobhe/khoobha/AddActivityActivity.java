@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Date;
+
 public class AddActivityActivity extends ActionBarActivity {
 
     private ActivityDataSource dataSource;
@@ -73,5 +75,6 @@ public class AddActivityActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }

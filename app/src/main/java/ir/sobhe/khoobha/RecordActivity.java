@@ -43,7 +43,9 @@ public class RecordActivity extends android.app.Activity {
         getActionBar().setTitle(intent.getStringExtra("activityTitle"));
         activityId = intent.getLongExtra("activityId", 0);
         c = Calendar.getInstance();
+        ShamsiCalendar shamsiCalendar = new ShamsiCalendar(c.getTime());
         date = df.format(c.getTime());
+        String shamsiDate = String.format("%s %d %s",shamsiCalendar.strWeekDay,shamsiCalendar.date, shamsiCalendar.strMonth);
         today = c.getTime();
 
         updatableRecord = recordDataSource.getRecord(activityId, date);
@@ -53,7 +55,7 @@ public class RecordActivity extends android.app.Activity {
         childrenListView.setAdapter(adapter);
 
         TextView txt_date = (TextView)findViewById(R.id.txt_date);
-        txt_date.setText(date);
+        txt_date.setText(shamsiDate);
 
         final Button btn_yesterday = (Button)findViewById(R.id.btn_yesterday);
         final Button btn_nextDay = (Button)findViewById(R.id.btn_nextDay);
@@ -66,7 +68,9 @@ public class RecordActivity extends android.app.Activity {
                     btn_nextDay.setVisibility(View.VISIBLE);
                 c.add(c.DATE, -1);
                 date = df.format(c.getTime());
-                txt_date.setText(date);
+                ShamsiCalendar shamsiCalendar = new ShamsiCalendar(c.getTime());
+                String shamsiDate = String.format("%s %d %s",shamsiCalendar.strWeekDay,shamsiCalendar.date, shamsiCalendar.strMonth);
+                txt_date.setText(shamsiDate);
                 updatableRecord = recordDataSource.getRecord(activityId, date);
                 if(updatableRecord == null)
                     isupdate = false;
@@ -81,7 +85,9 @@ public class RecordActivity extends android.app.Activity {
                 TextView txt_date = (TextView)findViewById(R.id.txt_date);
                 c.add(c.DATE, +1);
                 date = df.format(c.getTime());
-                txt_date.setText(date);
+                ShamsiCalendar shamsiCalendar = new ShamsiCalendar(c.getTime());
+                String shamsiDate = String.format("%s %d %s",shamsiCalendar.strWeekDay,shamsiCalendar.date, shamsiCalendar.strMonth);
+                txt_date.setText(shamsiDate);
                 if(today.equals(c.getTime()))
                     btn_nextDay.setVisibility(View.INVISIBLE);
                 updatableRecord = recordDataSource.getRecord(activityId, date);
