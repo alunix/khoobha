@@ -101,11 +101,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             //add default activities
             Activity[] activities = new Activity[5];
-            activities[0] = new Activity(13,"نماز صبح",3);
-            activities[1] = new Activity(12, "نماز ظهر", 1);
-            activities[2] = new Activity(2, "نماز مغرب", 1);
-            activities[3] = new Activity(6,"اذان", 1);
-            activities[4] = new Activity(5, "تکبیر", 1);
+            activities[0] = new Activity(3, "نماز مغرب", 1);
+            activities[1] = new Activity(5, "تکبیر", 1);
+            activities[2] = new Activity(6,"اذان", 1);
+            activities[3] = new Activity(12, "نماز ظهر", 1);
+            activities[4] = new Activity(13,"نماز صبح",3);
 
             for ( Activity activity : activities){
                 ContentValues values = new ContentValues();
@@ -115,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 sqLiteDatabase.insert(TABLE_ACTIVITY, null, values);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
