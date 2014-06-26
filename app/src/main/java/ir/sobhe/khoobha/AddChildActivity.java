@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import java.io.File;
 import java.io.FileOutputStream;
 
-public class AddChildActivity extends ActionBarActivity {
+public class AddChildActivity extends android.app.Activity {
 
     private static final int CAMERA_REQUEST = 1888;
     private ImageView imageView;
@@ -54,14 +54,6 @@ public class AddChildActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            }
-        });
-
-        Button btn_saveChild = (Button)findViewById(R.id.btn_saveChild);
-        btn_saveChild.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveChild();
             }
         });
     }

@@ -25,13 +25,4 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ذخیره"
-        android:id="@+id/btn_saveChild"
-        android:layout_below="@+id/txt_childName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp" />
-
 </RelativeLayout>
