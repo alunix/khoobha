@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.widget.GridView;
 
 import java.util.List;
 
@@ -45,8 +45,8 @@ public class ChildrenListActivity extends android.app.Activity {
         super.onResume();
         List<Child> childList = childDataSource.getAllChildren();
         ChildrenListAdapter adapter = new ChildrenListAdapter(this, childList.toArray(new Child[childList.size()]));
-        ListView childrenListView = (ListView)findViewById(R.id.childrenList);
-        childrenListView.setAdapter(adapter);
+        GridView childrenView = (GridView)findViewById(R.id.childList);
+        childrenView.setAdapter(adapter);
     }
 
     @Override

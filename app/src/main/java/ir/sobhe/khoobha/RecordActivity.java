@@ -51,7 +51,7 @@ public class RecordActivity extends android.app.Activity {
         updatableRecord = recordDataSource.getRecord(activityId, date);
         List<Child> childrenList = checkSelectedChildren(updatableRecord);
         ChildrenAdapter adapter = new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()]));
-        childrenView = (GridView)findViewById(R.id.childrenList);
+        childrenView = (GridView)findViewById(R.id.childList);
         childrenView.setAdapter(adapter);
 
         TextView txt_date = (TextView)findViewById(R.id.txt_date);

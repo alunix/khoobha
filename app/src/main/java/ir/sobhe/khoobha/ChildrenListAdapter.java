@@ -26,23 +26,22 @@ public class ChildrenListAdapter extends ArrayAdapter<Child> {
         this.values = values;
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater =  (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.child_item, parent, false);
         final long childId = values[position].id;
 
-        TextView childName = (TextView)rowView.findViewById(R.id.childrenList_name);
+        TextView childName = (TextView)rowView.findViewById(R.id.childName);
         childName.setText(values[position].name);
 
-        Button editChildButton = (Button)rowView.findViewById(R.id.childrenList_btn_editChild);
-        ImageView childImage = (ImageView)rowView.findViewById(R.id.childrenList_picture);
-        try{
+        Button editChildButton = (Button)rowView.findViewById(R.id.edit);
+        ImageView childImage = (ImageView)rowView.findViewById(R.id.childPicture);
+        try {
             Bitmap img = BitmapFactory.decodeFile(Child.DIR_PATH + values[position].imageName);
             childImage.setImageBitmap(img);
         }
-        catch (Exception e){
+        catch (Exception e) {
             e.printStackTrace();
         }
 

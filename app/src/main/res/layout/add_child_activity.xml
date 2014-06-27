@@ -9,12 +9,13 @@
     tools:context="ir.sobhe.khoobha.AddChildActivity">
 
     <ImageView
-        android:src="@drawable/ic_launcher"
+        android:src="@android:color/holo_blue_dark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_child"
         android:layout_below="@+id/txt_childName"
         android:layout_centerHorizontal="true"
+        android:background="@android:drawable/dialog_holo_dark_frame"
         android:layout_marginTop="30dp" />
 
     <EditText
