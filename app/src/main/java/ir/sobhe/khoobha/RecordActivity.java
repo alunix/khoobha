@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import java.util.Date;
@@ -26,7 +26,7 @@ public class RecordActivity extends android.app.Activity {
     private Record updatableRecord;
     private Date today;
     private long activityId;
-    private ListView childrenListView;
+    private GridView childrenView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +51,8 @@ public class RecordActivity extends android.app.Activity {
         updatableRecord = recordDataSource.getRecord(activityId, date);
         List<Child> childrenList = checkSelectedChildren(updatableRecord);
         ChildrenAdapter adapter = new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()]));
-        childrenListView = (ListView)findViewById(R.id.childrenList);
-        childrenListView.setAdapter(adapter);
+        childrenView = (GridView)findViewById(R.id.childrenList);
+        childrenView.setAdapter(adapter);
 
         TextView txt_date = (TextView)findViewById(R.id.txt_date);
         txt_date.setText(shamsiDate);
@@ -76,7 +76,7 @@ public class RecordActivity extends android.app.Activity {
                 if(updatableRecord == null)
                     isupdate = false;
                 List<Child> childrenList = checkSelectedChildren(updatableRecord);
-                childrenListView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
+                childrenView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
             }
         });
 
@@ -95,7 +95,7 @@ public class RecordActivity extends android.app.Activity {
                 if(updatableRecord == null)
                     isupdate = false;
                 List<Child> childrenList = checkSelectedChildren(updatableRecord);
-                childrenListView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
+                childrenView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
             }
         });
     }
@@ -103,8 +103,8 @@ public class RecordActivity extends android.app.Activity {
     private void saveRecord() {
         List<String> children = new ArrayList<String>();
         String childrenIds = "";
-        for(int i= 0 ; i < childrenListView.getCount(); i++){
-            Child c = (Child)childrenListView.getItemAtPosition(i);
+        for(int i= 0 ; i < childrenView.getCount(); i++){
+            Child c = (Child) childrenView.getItemAtPosition(i);
             if(c.selected){
                 children.add(Long.toString(c.id));
                 if (!childrenIds.isEmpty())

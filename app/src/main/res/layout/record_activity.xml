@@ -47,13 +47,15 @@
             android:textColor="#fff" />
     </LinearLayout>
 
-    <ListView
+    <GridView
         android:id="@+id/childrenList"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/btn_yesterday"
-        android:paddingTop="5dp"></ListView>
-
+        android:layout_height="fill_parent"
+        android:paddingTop="5dp"
+        android:columnWidth="150px"
+        android:rotationY="180"
+        android:gravity="center"
+        android:numColumns="3"
+        android:stretchMode="spacingWidthUniform"
+        android:verticalSpacing="4dp" />
 </LinearLayout>

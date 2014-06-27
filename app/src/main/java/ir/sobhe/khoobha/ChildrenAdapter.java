@@ -57,8 +57,8 @@ public class ChildrenAdapter extends ArrayAdapter<Child> {
         }
 
         ViewHolder holder = (ViewHolder)rowView.getTag();
-        holder.text.setText(values[position].name);
-        try{
+        holder.text.setText(values[position].name.split(" ")[0]);
+        try {
             Bitmap img = BitmapFactory.decodeFile(Child.DIR_PATH + values[position].imageName);
             holder.image.setImageBitmap(img);
         }

@@ -1,36 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="right">
-
-    <TextView
-        android:textAlignment="center"
-        android:id="@+id/childName"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:text="salam"
-        android:textSize="20px"
-        android:autoText="false">
-    </TextView>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:rotationY="180"
+    android:background="@android:drawable/dialog_holo_dark_frame"
+    android:clickable="false">
 
     <ImageView
         android:id="@+id/childPicture"
-        android:layout_width="122px"
-        android:layout_height="122px"
-        android:layout_marginLeft="4px"
-        android:src="@drawable/ic_launcher" >
+        android:layout_width="120px"
+        android:layout_height="160px"
+        android:src="@android:color/holo_blue_dark">
     </ImageView>
+
+    <TextView
+        android:id="@+id/childName"
+        android:layout_width="wrap_content"
+        android:layout_height="50px"
+        android:text="محمد"
+        android:autoText="false"
+        android:textColor="#fff"
+        android:background="#000"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/childPicture"
+        android:layout_alignRight="@+id/childPicture"
+        android:layout_alignEnd="@+id/childPicture"
+        android:alpha=".7"
+        android:textAlignment="center"
+        android:padding="10px"
+        android:textSize="20px">
+    </TextView>
 
     <CheckBox
         android:id="@+id/check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="4px"
-        android:layout_marginRight="10px" >
+        android:layout_alignBottom="@+id/childPicture"
+        android:layout_alignRight="@+id/childPicture"
+        android:layout_alignEnd="@+id/childPicture"
+        android:layout_alignTop="@+id/childPicture"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="bottom">
     </CheckBox>
 
 
-</LinearLayout>
+</RelativeLayout>
