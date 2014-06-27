@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +21,7 @@ public class ChildrenListAdapter extends ArrayAdapter<Child> {
     private final Child[] values;
 
     public ChildrenListAdapter(Context context, Child[] values){
-        super(context, R.layout.childrenlist_layout, values);
+        super(context, R.layout.child_item, values);
         this.context = context;
         this.values = values;
     }
@@ -32,7 +30,7 @@ public class ChildrenListAdapter extends ArrayAdapter<Child> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater =  (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.childrenlist_layout, parent, false);
+        View rowView = inflater.inflate(R.layout.child_item, parent, false);
         final long childId = values[position].id;
 
         TextView childName = (TextView)rowView.findViewById(R.id.childrenList_name);

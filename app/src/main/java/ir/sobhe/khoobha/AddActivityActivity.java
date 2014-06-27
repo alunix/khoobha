@@ -1,80 +1,62 @@
 package ir.sobhe.khoobha;
 
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.Date;
-
-public class AddActivityActivity extends ActionBarActivity {
+public class AddActivityActivity extends android.app.Activity {
 
     private ActivityDataSource dataSource;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_addactivity);
-        ((EditText)findViewById(R.id.txt_points)).setHint("1 ");
+        setContentView(R.layout.add_activity_activity);
         getActionBar().setTitle("فعالیت جدید");
 
         dataSource = new ActivityDataSource(this);
-
-
-        Button btn_save = (Button)findViewById(R.id.btn_save);
-        btn_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditText txt_title = (EditText)findViewById(R.id.txt_title);
-                String title = txt_title.getText().toString();
-                int points = 0;
-                if(title == null)
-                {
-                    Toast.makeText(AddActivityActivity.this, "لطفا عنوان فعالیت را تکمیل کنید",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                EditText txt_points = (EditText)findViewById(R.id.txt_points);
-                try{
-                    points = Integer.parseInt(txt_points.getText().toString());
-                }
-                catch (Exception e){
-                    Toast.makeText(AddActivityActivity.this, "لطفا عدد معتبری را به عنوان امتیاز فعالیت وارد کنید.",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                Activity activity = new Activity(title, points);
-                dataSource.open();
-                dataSource.addActivity(activity);
-                dataSource.close();
-                AddActivityActivity.this.finish();
-            }
-        });
     }
 
+    private void saveActivity() {
+        EditText txt_title = (EditText)findViewById(R.id.txt_title);
+        String title = txt_title.getText().toString();
+        int points = 0;
+        if(title == null)
+        {
+            Toast.makeText(AddActivityActivity.this, "لطفا عنوان فعالیت را تکمیل کنید",Toast.LENGTH_LONG).show();
+            return;
+        }
+        EditText txt_points = (EditText)findViewById(R.id.txt_points);
+        try {
+            points = Integer.parseInt(txt_points.getText().toString());
+        }
+        catch (Exception e) {
+            Toast.makeText(AddActivityActivity.this, "لطفا عدد معتبری را به عنوان امتیاز فعالیت وارد کنید.",Toast.LENGTH_LONG).show();
+            return;
+        }
+        Activity activity = new Activity(title, points);
+        dataSource.open();
+        dataSource.addActivity(activity);
+        dataSource.close();
+        AddActivityActivity.this.finish();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add_activity, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                saveActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
-
-
 }

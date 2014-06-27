@@ -31,7 +31,7 @@ public class RecordActivity extends android.app.Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record);
+        setContentView(R.layout.record_activity);
 
         childDataSource = new ChildDataSource(this);
         childDataSource.open();

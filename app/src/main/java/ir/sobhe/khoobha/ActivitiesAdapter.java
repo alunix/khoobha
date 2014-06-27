@@ -1,7 +1,6 @@
 package ir.sobhe.khoobha;
 
 import android.content.Context;
-import android.support.v7.appcompat.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ public class ActivitiesAdapter  extends ArrayAdapter<Activity>{
     private final Activity[] values;
 
     public ActivitiesAdapter(Context context, Activity[] values){
-        super(context, R.layout.activity_item_layout, values);
+        super(context, R.layout.activity_item, values);
         this.context = context;
         this.values = values;
     }
@@ -26,7 +25,7 @@ public class ActivitiesAdapter  extends ArrayAdapter<Activity>{
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater =  (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.activity_item_layout, parent, false);
+        View rowView = inflater.inflate(R.layout.activity_item, parent, false);
         TextView title = (TextView)rowView.findViewById(R.id.title);
         title.setText(values[position].title);
 

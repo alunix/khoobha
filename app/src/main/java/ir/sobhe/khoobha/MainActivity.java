@@ -1,13 +1,10 @@
 package ir.sobhe.khoobha;
 
-import android.app.*;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -49,7 +45,7 @@ public class MainActivity extends android.app.Activity {
         TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/bmitra.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
         getActionBar().setTitle("خوب‌ها");
 
         dataSource = new ActivityDataSource(this);

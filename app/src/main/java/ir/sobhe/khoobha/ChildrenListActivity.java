@@ -1,13 +1,9 @@
 package ir.sobhe.khoobha;
 
-import android.app.*;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.List;
@@ -20,7 +16,7 @@ public class ChildrenListActivity extends android.app.Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_children_list);
+        setContentView(R.layout.child_list_activity);
         getActionBar().setTitle("بچه‌ها");
 
         childDataSource = new ChildDataSource(this);
@@ -29,7 +25,7 @@ public class ChildrenListActivity extends android.app.Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.children_list, menu);
+        getMenuInflater().inflate(R.menu.child_list, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

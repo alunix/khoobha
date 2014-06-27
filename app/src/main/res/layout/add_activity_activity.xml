@@ -49,15 +49,7 @@
         android:layout_alignRight="@+id/txt_title"
         android:layout_alignEnd="@+id/txt_title"
         android:autoText="false"
-        android:clickable="false" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ذخیره"
-        android:id="@+id/btn_save"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/txt_title"
-        android:layout_alignStart="@+id/txt_title" />
+        android:clickable="false"
+        android:text="1" />
 
 </RelativeLayout>
