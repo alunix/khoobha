@@ -9,14 +9,12 @@
     <TextView
         android:textAlignment="center"
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:text="salam"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="فعالیت"
         android:textSize="20dp"
-        android:autoText="false"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp">
+        android:drawableRight="@drawable/abc_ic_ab_back_holo_light"
+        android:padding="15dp">
     </TextView>
 
 </LinearLayout>

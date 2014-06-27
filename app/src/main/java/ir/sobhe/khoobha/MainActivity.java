@@ -56,14 +56,6 @@ public class MainActivity extends android.app.Activity {
         dataSource.open();
 
         setProgressBarIndeterminateVisibility(false);
-
-        Button addActivityButton = (Button) findViewById(R.id.AddActivity);
-        addActivityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, AddActivityActivity.class));
-            }
-        });
     }
 
     private void syncData() {
@@ -102,6 +94,9 @@ public class MainActivity extends android.app.Activity {
             e.printStackTrace();
         }
 
+        // add new activity button
+        activities.add(new Activity("+ فعالیت جدید", 0));
+
         ActivitiesAdapter adapter = new ActivitiesAdapter(this, activities.toArray(new Activity[activities.size()]));
         final ListView listView = (ListView)findViewById(R.id.ActivitiesList);
         listView.setAdapter(adapter);
@@ -109,11 +104,18 @@ public class MainActivity extends android.app.Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                //go to scoring page for selected activity
-                Intent recordIntent = new Intent(MainActivity.this, RecordActivity.class);
-                recordIntent.putExtra("activityId", ((Activity)listView.getItemAtPosition(position)).id);
-                recordIntent.putExtra("activityTitle", ((Activity)listView.getItemAtPosition(position)).title);
-                startActivity(recordIntent);
+                Activity activity = ((Activity)listView.getItemAtPosition(position));
+
+                if (activity.id == -1) {
+                    // new activity
+                    startActivity(new Intent(MainActivity.this, AddActivityActivity.class));
+                } else {
+                    // activity record
+                    Intent recordIntent = new Intent(MainActivity.this, RecordActivity.class);
+                    recordIntent.putExtra("activityId", activity.id);
+                    recordIntent.putExtra("activityTitle", activity.title);
+                    startActivity(recordIntent);
+                }
             }
         });
     }
