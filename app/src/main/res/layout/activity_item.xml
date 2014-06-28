@@ -12,9 +12,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="فعالیت"
-        android:textSize="20dp"
         android:drawableRight="@drawable/abc_ic_ab_back_holo_light"
-        android:padding="15dp">
+        android:padding="15dp"
+        android:textSize="16dp">
     </TextView>
 
 </LinearLayout>

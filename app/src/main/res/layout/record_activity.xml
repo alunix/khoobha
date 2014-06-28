@@ -20,7 +20,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignBaseline="@+id/txt_date"
             android:layout_toLeftOf="@+id/txt_date"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="#fff"
             style="@style/Widget.AppCompat.ActionButton"/>
 
@@ -32,7 +32,7 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/txt_date"
             android:layout_alignBaseline="@+id/txt_date"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="#fff"
             style="@style/Widget.AppCompat.ActionButton"/>
 
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:text="پنجشنبه، 5 تیر"
             android:id="@+id/txt_date"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:textColor="#fff" />
