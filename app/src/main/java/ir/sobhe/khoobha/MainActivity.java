@@ -42,7 +42,7 @@ public class MainActivity extends android.app.Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/bmitra.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
+        TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/app.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main_activity);

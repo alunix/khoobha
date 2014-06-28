@@ -36,17 +36,6 @@ import java.util.List;
  */
 public class LoginActivity extends Activity {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-
     private final String ADDRESS = "http://khoobha.net/api/register";
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -82,9 +71,7 @@ public class LoginActivity extends Activity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
     }
-
 
 
     /**
@@ -166,24 +153,18 @@ public class LoginActivity extends Activity {
                         finish();
                     }
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
-
         }
     }
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
-
 
 
     /**
@@ -224,9 +205,4 @@ public class LoginActivity extends Activity {
 
         mEmailView.setAdapter(adapter);
     }
-
-
 }
-
-
-
