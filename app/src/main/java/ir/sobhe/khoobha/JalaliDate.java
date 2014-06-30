@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by hadi on 14/6/26 AD.
  */
-public class ShamsiCalendar {
+public class JalaliDate {
 
     public String strWeekDay = "";
     public String strMonth = "";
@@ -14,13 +14,13 @@ public class ShamsiCalendar {
     int month;
     int year;
 
-    public ShamsiCalendar()
+    public JalaliDate()
     {
         Date MiladiDate = new Date();
         calcSolarCalendar(MiladiDate);
     }
 
-    public ShamsiCalendar(Date MiladiDate)
+    public JalaliDate(Date MiladiDate)
     {
         calcSolarCalendar(MiladiDate);
     }

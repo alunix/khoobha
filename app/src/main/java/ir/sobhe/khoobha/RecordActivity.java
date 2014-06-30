@@ -43,9 +43,7 @@ public class RecordActivity extends android.app.Activity {
         getActionBar().setTitle(intent.getStringExtra("activityTitle"));
         activityId = intent.getLongExtra("activityId", 0);
         c = Calendar.getInstance();
-        ShamsiCalendar shamsiCalendar = new ShamsiCalendar(c.getTime());
         date = df.format(c.getTime());
-        String shamsiDate = String.format("%s %d %s",shamsiCalendar.strWeekDay,shamsiCalendar.date, shamsiCalendar.strMonth);
         today = c.getTime();
 
         updatableRecord = recordDataSource.getRecord(activityId, date);
@@ -55,7 +53,7 @@ public class RecordActivity extends android.app.Activity {
         childrenView.setAdapter(adapter);
 
         TextView txt_date = (TextView)findViewById(R.id.txt_date);
-        txt_date.setText(shamsiDate);
+        txt_date.setText(getJalaliDate(today));
 
         final Button btn_yesterday = (Button)findViewById(R.id.btn_yesterday);
         final Button btn_nextDay = (Button)findViewById(R.id.btn_nextDay);
@@ -69,9 +67,7 @@ public class RecordActivity extends android.app.Activity {
                     btn_nextDay.setVisibility(View.VISIBLE);
                 c.add(c.DATE, -1);
                 date = df.format(c.getTime());
-                ShamsiCalendar shamsiCalendar = new ShamsiCalendar(c.getTime());
-                String shamsiDate = String.format("%s، %d %s",shamsiCalendar.strWeekDay,shamsiCalendar.date, shamsiCalendar.strMonth);
-                txt_date.setText(shamsiDate);
+                txt_date.setText(getJalaliDate(c.getTime()));
                 updatableRecord = recordDataSource.getRecord(activityId, date);
                 if(updatableRecord == null)
                     isupdate = false;
@@ -86,9 +82,7 @@ public class RecordActivity extends android.app.Activity {
                 TextView txt_date = (TextView)findViewById(R.id.txt_date);
                 c.add(c.DATE, +1);
                 date = df.format(c.getTime());
-                ShamsiCalendar shamsiCalendar = new ShamsiCalendar(c.getTime());
-                String shamsiDate = String.format("%s %d %s",shamsiCalendar.strWeekDay,shamsiCalendar.date, shamsiCalendar.strMonth);
-                txt_date.setText(shamsiDate);
+                txt_date.setText(getJalaliDate(c.getTime()));
                 if(today.equals(c.getTime()))
                     btn_nextDay.setVisibility(View.INVISIBLE);
                 updatableRecord = recordDataSource.getRecord(activityId, date);
@@ -98,6 +92,12 @@ public class RecordActivity extends android.app.Activity {
                 childrenView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
             }
         });
+    }
+
+    public String getJalaliDate(Date date) {
+        JalaliDate jalali = new JalaliDate(date);
+        String str = String.format("%s، %d %s", jalali.strWeekDay, jalali.date, jalali.strMonth);
+        return str.replace("0", "۰").replace("1", "۱").replace("2", "۲").replace("3", "۳").replace("4", "۴").replace("5", "۵").replace("6", "۶").replace("7", "۷").replace("8", "۸").replace("9", "۹");
     }
 
     private void saveRecord() {
