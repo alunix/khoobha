@@ -32,22 +32,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_OPERATION = "operation";
     public static final String COLUMN_IMAGE = "image";
 
-
     private static final String DATABASE_NAME = "khoobha.db";
     private static final int DATABASE_VERSION = 1;
 
-
-
-
-
-    //database creation script
     private static final String CHILD_CREATE = ""
             + "CREATE TABLE " + TABLE_CHILD + " ("
             + COLUMN_ID + " integer NOT NULL PRIMARY KEY, "
             + COLUMN_NAME + " varchar(100) null default null, "
             + COLUMN_IMAGE + " varchar(100) null default null);";
-
-
 
     private static final String ACTIVITY_CREATE = ""
             + "create table " + TABLE_ACTIVITY + " ("
@@ -77,14 +69,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "slug varchar(100) null default null, " +
             "image varchar(50) null default null, " +
             "version varchar(10) null default null, " +
-            "synced_at timestamp null default null, " +
-            //"received_at timestamp null default null, " +
+            "sent_at timestamp null default null, " +
+            "received_at timestamp null default null, " +
             "assistant_email varchar(50) null default null, " +
             "assistant_password varchar(50) null default null, " +
             "options text null default null" +
             ");";
-
-
 
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -107,7 +97,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             activities[3] = new Activity(12, "نماز ظهر", 1);
             activities[4] = new Activity(13,"نماز صبح",3);
 
-            for ( Activity activity : activities){
+            for (Activity activity : activities) {
                 ContentValues values = new ContentValues();
                 values.put(COLUMN_ID, activity.id);
                 values.put(COLUMN_TITLE, activity.title);
@@ -123,7 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
         if (i == 1 && i2 == 2) {
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_CHILD + ", " + TABLE_RECORD + ", " + TABLE_ACTIVITY);
+
         }
     }
 }
