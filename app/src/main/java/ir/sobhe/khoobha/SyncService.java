@@ -106,8 +106,6 @@ public class SyncService extends IntentService {
             serviceResult = RESULT_ERROR;
         }
 
-        // todo: filter my events
-
         // receive and send data
         if (sendData() && receiveData(events))
             serviceResult = RESULT_ERROR;
@@ -121,14 +119,16 @@ public class SyncService extends IntentService {
     private boolean receiveData(JSONArray events) {
         JSONObject event, object;
         String table, operation, row_id, created_at = "", url, values, image;
+        int i = 0;
 
-        int i;
-        for (i = 0; i < events.length(); i++) {
-            try {
+        try {
+            for (i = 0; i < events.length(); i++) {
                 event = events.getJSONObject(i);
                 table = event.getString("table");
                 operation = event.getString("operation");
                 row_id = event.getString("row_id");
+
+                // todo: skip my events
 
                 url = API + table +"/"+ row_id + "/";
                 HttpResponse response = (new DefaultHttpClient()).execute(new HttpGet(url));
@@ -148,10 +148,9 @@ public class SyncService extends IntentService {
                 database.execSQL("replace into "+ table +" values ("+ values +")");
 
                 created_at = event.getString("created_at");
-            } catch (Exception e) {
-                e.printStackTrace();
-                break;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (!created_at.isEmpty())
@@ -203,10 +202,11 @@ public class SyncService extends IntentService {
                     else
                         continue;
 
-                    // todo: update record content
                     if (operation.equals("insert"))
                         updateId(database, table, id, result.getString("id"));
 
+                    if (table.equals("record"))
+                        database.execSQL("update record set child_list='" + result.getString("child_list") + "', items="+ result.getString("items") +" where id = "+ result.getString("id"));
                 } catch (Exception e) {
                     e.printStackTrace();
                     break;
