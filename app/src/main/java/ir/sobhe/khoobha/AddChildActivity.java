@@ -27,7 +27,6 @@ public class AddChildActivity extends android.app.Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_child_activity);
-        getActionBar().setTitle("ثبت نام");
 
         dataSource = new ChildDataSource(this);
         final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
