@@ -28,11 +28,12 @@ public class GroupDataSource {
     public void addGroup(Group group){
         try{
             ContentValues values = new ContentValues();
-            values.put("id", group.id);
+            if(group.id != -1)
+                values.put("id", group.id);
             values.put("assistant_email", group.assistantEmail);
             values.put("assistant_password", group.assisrantPassword);
             values.put("title", group.groupTitle);
-            database.insert(DatabaseHelper.TABLE_GROUP,null,values);
+            group.id = database.insert(DatabaseHelper.TABLE_GROUP,null,values);
         }catch (Exception e){
             e.printStackTrace();
         }

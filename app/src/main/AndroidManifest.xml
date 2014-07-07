@@ -48,6 +48,10 @@
             android:name="ir.sobhe.khoobha.ChildrenListActivity"
             android:label="@string/title_activity_children_list" >
         </activity>
+        <activity
+            android:name="ir.sobhe.khoobha.ChooseGroupActivity"
+            android:label="@string/title_activity_choose_group" >
+        </activity>
     </application>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->

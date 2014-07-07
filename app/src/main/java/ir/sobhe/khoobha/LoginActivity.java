@@ -2,6 +2,7 @@ package ir.sobhe.khoobha;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -36,13 +38,12 @@ import java.util.List;
  */
 public class LoginActivity extends Activity {
 
-    private final String ADDRESS = "http://khoobha.net/api/register";
+    private final String ADDRESS = "http://khoobha.net/api/assistant_groups";
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private EditText mTitleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,6 @@ public class LoginActivity extends Activity {
 
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        mTitleView = (EditText)findViewById(R.id.txt_groupName);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -88,7 +88,6 @@ public class LoginActivity extends Activity {
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-        String title = mTitleView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -111,11 +110,7 @@ public class LoginActivity extends Activity {
             focusView = mEmailView;
             cancel = true;
         }
-        else if(title == null){
-            mTitleView.setError("لطفا نام مجموعه خود را وارد کنید");
-            focusView = mTitleView;
-            cancel = true;
-        }
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -128,7 +123,6 @@ public class LoginActivity extends Activity {
             List<NameValuePair> pairs = new ArrayList<NameValuePair>();
             pairs.add(new BasicNameValuePair("email", email));
             pairs.add(new BasicNameValuePair("password", password));
-            pairs.add(new BasicNameValuePair("title", title));
 
             try{
                 post.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
@@ -140,17 +134,14 @@ public class LoginActivity extends Activity {
                     JSONObject jsonObject = new JSONObject(result);
                     String status = jsonObject.getString("status");
                     if(status.equalsIgnoreCase("success")){
-                        int group = jsonObject.getInt("group");
-                        GroupDataSource groupDataSource = new GroupDataSource(this);
-                        groupDataSource.open();
-                        groupDataSource.addGroup(new Group(group, title, email,password));
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                        SharedPreferences.Editor edit = prefs.edit();
-                        edit.putBoolean(getString(R.string.pref_previously_registered), Boolean.TRUE);
-                        edit.putInt("groupId", group);
-                        edit.commit();
-                        setResult(200);
-                        finish();
+                        Intent chooseGroupIntent = new Intent(this, ChooseGroupActivity.class);
+                        chooseGroupIntent.putExtra("existingGroups", result);
+                        chooseGroupIntent.putExtra("email", email);
+                        chooseGroupIntent.putExtra("password", password);
+                        startActivityForResult(chooseGroupIntent, 101);
+                    }
+                    else{
+                        Toast.makeText(this, "رمز عبور اشتباه وارد شده است.",Toast.LENGTH_LONG).show();
                     }
                 }
             } catch (Exception e) {
@@ -166,6 +157,15 @@ public class LoginActivity extends Activity {
         return password.length() > 4;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 101){
+            if(resultCode == 200){
+                setResult(200);
+                finish();
+            }
+        }
+    }
 
     /**
      * Use an AsyncTask to fetch the user's email addresses on a background thread, and update

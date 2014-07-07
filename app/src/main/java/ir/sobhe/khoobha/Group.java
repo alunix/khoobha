@@ -16,4 +16,11 @@ public class Group {
         groupTitle = title;
     }
 
+    public Group(String title, String email, String password){
+        id = -1;
+        assistantEmail = email;
+        assisrantPassword = password;
+        groupTitle = title;
+    }
+
 }
