@@ -46,7 +46,7 @@ import java.util.List;
 public class SyncService extends IntentService {
 
     public static final int RESULT_ERROR = 29;
-    private int serviceResult = Activity.RESULT_CANCELED;
+    private int serviceResult = Activity.RESULT_OK;
     public static final String NOTIFICATION = "ir.sobhe.khoobha";
     public static final String API = "http://khoobha.net/api/";
     private String groupId, received_at, sent_at;
@@ -108,9 +108,9 @@ public class SyncService extends IntentService {
 
         // receive and send data
         if (sendData() && receiveData(events))
-            serviceResult = RESULT_ERROR;
-        else
             serviceResult = Activity.RESULT_OK;
+        else
+            serviceResult = RESULT_ERROR;
 
         database.close();
         dbHelper.close();
