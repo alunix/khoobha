@@ -33,6 +33,9 @@ public class GroupAdapter extends ArrayAdapter<Group> {
         TextView itemName = (TextView)rowView.findViewById(R.id.txt_groupItem);
         itemName.setText(values[position].groupTitle);
 
+        if (values[position].id == -1)
+            itemName.setCompoundDrawables(null, null, null, null);
+
         return rowView;
     }
 }

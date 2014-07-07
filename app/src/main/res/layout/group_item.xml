@@ -5,9 +5,13 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:textAlignment="center"
+        android:id="@+id/txt_groupItem"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="سلام"
-        android:id="@+id/txt_groupItem"
-        android:layout_gravity="right" />
+        android:text="مجموعه"
+        android:drawableRight="@drawable/abc_ic_ab_back_holo_light"
+        android:padding="15dp"
+        android:textSize="16dp">
+    </TextView>
 </LinearLayout>
