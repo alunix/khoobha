@@ -92,44 +92,41 @@ public class LoginActivity extends Activity {
         boolean cancel = false;
         View focusView = null;
 
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
+        // Validation
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
+            mEmailView.setError("رایانامه را وارد کنید.");
             focusView = mEmailView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+            mEmailView.setError("رایانامه معتبر نیست.");
             focusView = mEmailView;
             cancel = true;
         }
 
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError("گذرواژه را وارد کنید.");
+            focusView = mPasswordView;
+            cancel = true;
+        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Send email and password to server for checing
+            // Send email and password to server for checking
             HttpClient client = new DefaultHttpClient();
             HttpPost post = new HttpPost(ADDRESS);
             List<NameValuePair> pairs = new ArrayList<NameValuePair>();
             pairs.add(new BasicNameValuePair("email", email));
             pairs.add(new BasicNameValuePair("password", password));
 
-            try{
+            try {
                 post.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
                 HttpResponse response = client.execute(post);
                 int responseCode = response.getStatusLine().getStatusCode();
                 String result = "";
-                if(responseCode == 200){
+                if (responseCode == 200) {
                     result = EntityUtils.toString(response.getEntity());
                     JSONObject jsonObject = new JSONObject(result);
                     String status = jsonObject.getString("status");
@@ -140,9 +137,12 @@ public class LoginActivity extends Activity {
                         chooseGroupIntent.putExtra("password", password);
                         startActivityForResult(chooseGroupIntent, 101);
                     }
-                    else{
-                        Toast.makeText(this, "رمز عبور اشتباه وارد شده است.",Toast.LENGTH_LONG).show();
+                    else {
+                        Toast.makeText(this, "گذرواژه صحیح نیست.",Toast.LENGTH_LONG).show();
                     }
+                }
+                else{
+                    Toast.makeText(this, "خطا در ارتباط با سرور", Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -154,7 +154,7 @@ public class LoginActivity extends Activity {
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 4;
+        return true;
     }
 
     @Override

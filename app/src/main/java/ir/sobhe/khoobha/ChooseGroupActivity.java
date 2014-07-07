@@ -83,6 +83,11 @@ public class ChooseGroupActivity extends android.app.Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Group selectedGroup = (Group)(lst_groups.getItemAtPosition(position));
                 dataSource.addGroup(selectedGroup);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putBoolean(getString(R.string.pref_previously_registered), Boolean.TRUE);
+                edit.putLong("groupId", selectedGroup.id);
+                edit.commit();
                 setResult(200);
                 finish();
             }
