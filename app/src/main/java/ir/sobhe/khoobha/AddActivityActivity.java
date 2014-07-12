@@ -14,7 +14,6 @@ public class AddActivityActivity extends android.app.Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_activity_activity);
-        getActionBar().setTitle("فعالیت جدید");
 
         dataSource = new ActivityDataSource(this);
     }

@@ -1,47 +1,65 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="ir.sobhe.khoobha.ChooseGroupActivity" android:layoutDirection="rtl">
+    tools:context="ir.sobhe.khoobha.ChooseGroupActivity" android:layoutDirection="rtl"
+    android:orientation="vertical">
 
-    <TextView
-        android:text="مشخصات شما یافت نشد. برای عضویت و ثبت مجموعه خود نام آن را وارد کنید."
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:id="@+id/txt_message"
-        android:visibility="invisible" />
+        android:visibility="gone"
+        android:id="@+id/lSelect"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-    <EditText
-        android:layout_width="fill_parent"
+        <TextView
+            android:text="انتخاب مجموعه"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="right"
+            android:id="@+id/txt_groups"
+            android:padding="10dp" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lst_groups"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_goupName"
-        android:hint="نام مجموعه جدید"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentTop="false"
-        android:layout_below="@+id/lst_groups" />
+        android:id="@+id/lCreate"
+        android:padding="@dimen/activity_horizontal_margin">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="right"
+            android:text="عنوان مجموعه"
+            android:id="@+id/txt_groupTitle"
+            android:layout_below="@+id/lst_groups"
+            android:padding="10dp" />
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="ثبت"
-        android:id="@+id/btn_chooseGroup"
-        android:layout_below="@+id/txt_goupName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" />
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_groupName"
+            android:hint="مسجد خدا"
+            android:layout_below="@+id/txt_groupTitle"
+            android:layout_marginTop="10dp" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lst_groups"
-        android:layout_alignParentBottom="false"
-        android:layout_centerHorizontal="true"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
-        android:layout_alignParentTop="true" />
-
-</RelativeLayout>
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="تایید"
+            android:id="@+id/btn_register"
+            android:layout_below="@+id/txt_groupName"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
+</LinearLayout>

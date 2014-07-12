@@ -107,7 +107,7 @@ public class SyncService extends IntentService {
         }
 
         // receive and send data
-        if (sendData() && receiveData(events))
+        if (serviceResult != RESULT_ERROR && sendData() && receiveData(events))
             serviceResult = Activity.RESULT_OK;
         else
             serviceResult = RESULT_ERROR;

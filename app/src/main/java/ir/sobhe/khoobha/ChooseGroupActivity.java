@@ -1,20 +1,13 @@
 package ir.sobhe.khoobha;
 
-import android.app.*;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
-import android.widget.ListAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,10 +28,10 @@ import java.util.List;
 
 public class ChooseGroupActivity extends android.app.Activity {
 
-    private Button btn_chooseGroup;
+    private Button btn_register;
     private ListView lst_groups;
     private EditText txt_groupName;
-    private TextView txt_message;
+    private LinearLayout lSelect, lCreate;
     private GroupDataSource dataSource;
 
 
@@ -47,10 +40,11 @@ public class ChooseGroupActivity extends android.app.Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_group);
 
-        btn_chooseGroup = (Button)findViewById(R.id.btn_chooseGroup);
+        btn_register = (Button)findViewById(R.id.btn_register);
         lst_groups = (ListView)findViewById(R.id.lst_groups);
-        txt_groupName = (EditText)findViewById(R.id.txt_goupName);
-        txt_message = (TextView)findViewById(R.id.txt_message);
+        txt_groupName = (EditText)findViewById(R.id.txt_groupName);
+        lSelect = (LinearLayout)findViewById(R.id.lSelect);
+        lCreate = (LinearLayout)findViewById(R.id.lCreate);
         dataSource = new GroupDataSource(this);
         dataSource.open();
 
@@ -66,13 +60,15 @@ public class ChooseGroupActivity extends android.app.Activity {
                 JSONObject groupObj = groupsArray.getJSONObject(i);
                 groupList.add(new Group(groupObj.getInt("id"), groupObj.getString("title"), email, password));
             }
-            if(groupList.size() == 0){
-                lst_groups.setVisibility(View.INVISIBLE);
-                txt_message.setVisibility(View.VISIBLE);
-            }
 
-            GroupAdapter adapter = new GroupAdapter(this, groupList.toArray(new Group[groupList.size()]));
-            lst_groups.setAdapter(adapter);
+            if(groupList.size() > 0){
+                lSelect.setVisibility(View.VISIBLE);
+                lCreate.setVisibility(View.GONE);
+
+                groupList.add(new Group("+ مجموعه جدید", "", ""));
+                GroupAdapter adapter = new GroupAdapter(this, groupList.toArray(new Group[groupList.size()]));
+                lst_groups.setAdapter(adapter);
+            }
         }
         catch (Exception exc){
             exc.printStackTrace();
@@ -82,19 +78,28 @@ public class ChooseGroupActivity extends android.app.Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Group selectedGroup = (Group)(lst_groups.getItemAtPosition(position));
-                dataSource.addGroup(selectedGroup);
-                setResult(200);
-                finish();
+
+                if (selectedGroup.id == -1) {
+                    lCreate.setVisibility(View.VISIBLE);
+                } else {
+                    dataSource.addGroup(selectedGroup);
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                    SharedPreferences.Editor edit = prefs.edit();
+                    edit.putBoolean(getString(R.string.pref_previously_registered), Boolean.TRUE);
+                    edit.putLong("groupId", selectedGroup.id);
+                    edit.commit();
+                    setResult(200);
+                    finish();
+                }
             }
         });
 
-        btn_chooseGroup.setOnClickListener(new View.OnClickListener() {
+        btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(txt_groupName.length() == 0){
+                if (txt_groupName.length() == 0) {
                     Toast.makeText(ChooseGroupActivity.this, "لطفا نام مجموعه جدید را وارد نمایید.", Toast.LENGTH_LONG).show();
-                }
-                else{
+                } else {
                     //api call to add group and get id from server
                     String title = txt_groupName.getText().toString();
                     final String ADDRESS = "http://khoobha.net/api/register";
@@ -105,18 +110,18 @@ public class ChooseGroupActivity extends android.app.Activity {
                     pairs.add(new BasicNameValuePair("password", password));
                     pairs.add(new BasicNameValuePair("title", title));
 
-                    try{
+                    try {
                         post.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
                         HttpResponse response = client.execute(post);
                         int responseCode = response.getStatusLine().getStatusCode();
                         String result = "";
-                        if(responseCode == 200){
+                        if (responseCode == 200) {
                             result = EntityUtils.toString(response.getEntity());
                             JSONObject jsonObject = new JSONObject(result);
                             String status = jsonObject.getString("status");
-                            if(status.equalsIgnoreCase("success")){
+                            if (status.equalsIgnoreCase("success")) {
                                 int group = jsonObject.getInt("group");
-                                dataSource.addGroup(new Group(group, title, email,password));
+                                dataSource.addGroup(new Group(group, title, email, password));
                                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                                 SharedPreferences.Editor edit = prefs.edit();
                                 edit.putBoolean(getString(R.string.pref_previously_registered), Boolean.TRUE);
@@ -124,8 +129,7 @@ public class ChooseGroupActivity extends android.app.Activity {
                                 edit.commit();
                                 setResult(200);
                                 finish();
-                            }
-                            else{
+                            } else {
                                 Toast.makeText(ChooseGroupActivity.this, "خطا در ارتباط با سرور...", Toast.LENGTH_LONG).show();
                             }
                         }
