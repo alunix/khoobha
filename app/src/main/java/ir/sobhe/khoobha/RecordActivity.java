@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class RecordActivity extends android.app.Activity {
     private Date today;
     private long activityId;
     private GridView childrenView;
+    private ChildrenAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class RecordActivity extends android.app.Activity {
 
         updatableRecord = recordDataSource.getRecord(activityId, date);
         List<Child> childrenList = checkSelectedChildren(updatableRecord);
-        ChildrenAdapter adapter = new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()]));
+        adapter = new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()]));
         childrenView = (GridView)findViewById(R.id.childList);
         childrenView.setAdapter(adapter);
 
@@ -63,6 +65,10 @@ public class RecordActivity extends android.app.Activity {
             TextView txt_date = (TextView)findViewById(R.id.txt_date);
             @Override
             public void onClick(View view) {
+                if(adapter.isDataChanged){
+                    saveRecord();
+                    adapter.isDataChanged = false;
+                }
                 if(btn_nextDay.getVisibility() == View.INVISIBLE)
                     btn_nextDay.setVisibility(View.VISIBLE);
                 c.add(c.DATE, -1);
@@ -79,6 +85,10 @@ public class RecordActivity extends android.app.Activity {
         btn_nextDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(adapter.isDataChanged){
+                    saveRecord();
+                    adapter.isDataChanged = false;
+                }
                 TextView txt_date = (TextView)findViewById(R.id.txt_date);
                 c.add(c.DATE, +1);
                 date = df.format(c.getTime());
@@ -120,31 +130,24 @@ public class RecordActivity extends android.app.Activity {
         else{
             recordDataSource.addRecord(record);
         }
-        finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.record, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_save:
-                saveRecord();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         recordDataSource.close();
         childDataSource.close();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(adapter.isDataChanged){
+            saveRecord();
+            adapter.isDataChanged = false;
+        }
     }
 
     private List<Child> checkSelectedChildren(Record newRecord){

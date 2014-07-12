@@ -19,6 +19,7 @@ public class ChildrenAdapter extends ArrayAdapter<Child> {
 
     private final Context context;
     private final Child[] values;
+    public boolean isDataChanged = false;
 
     public ChildrenAdapter(Context context, Child[] values){
         super(context, R.layout.record_item, values);
@@ -46,6 +47,8 @@ public class ChildrenAdapter extends ArrayAdapter<Child> {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     Child element = (Child)viewHolder.checkbox.getTag();
+                    if(!element.selected || !buttonView.isChecked())
+                        isDataChanged = true;
                     element.selected = buttonView.isChecked();
                 }
             });

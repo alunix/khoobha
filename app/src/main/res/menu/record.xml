@@ -2,9 +2,4 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ir.sobhe.khoobha.RecordActivity" >
-    
-    <item android:id="@+id/action_save"
-        android:icon="@drawable/ic_action_accept"
-        android:title="تایید"
-        android:showAsAction="always" />
 </menu>
