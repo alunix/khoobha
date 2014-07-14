@@ -21,14 +21,12 @@ public class RecordActivity extends android.app.Activity {
     private ChildDataSource childDataSource;
     private RecordDataSource recordDataSource;
     private String date;
-    private boolean isupdate;
     private Calendar c;
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    private Record updatableRecord;
+    private Record updatebleRecord;
     private Date today;
     private long activityId;
     private GridView childrenView;
-    private ChildrenAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +46,10 @@ public class RecordActivity extends android.app.Activity {
         date = df.format(c.getTime());
         today = c.getTime();
 
-        updatableRecord = recordDataSource.getRecord(activityId, date);
-        List<Child> childrenList = checkSelectedChildren(updatableRecord);
-        adapter = new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()]));
+        updatebleRecord = recordDataSource.getRecord(activityId, date);
+        List<Child> childrenList = checkSelectedChildren(updatebleRecord);
         childrenView = (GridView)findViewById(R.id.childList);
-        childrenView.setAdapter(adapter);
+        childrenView.setAdapter(new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()])));
 
         TextView txt_date = (TextView)findViewById(R.id.txt_date);
         txt_date.setText(getJalaliDate(today));
@@ -65,19 +62,15 @@ public class RecordActivity extends android.app.Activity {
             TextView txt_date = (TextView)findViewById(R.id.txt_date);
             @Override
             public void onClick(View view) {
-                if(adapter.isDataChanged){
-                    saveRecord();
-                    adapter.isDataChanged = false;
-                }
+                saveRecord();
+
                 if(btn_nextDay.getVisibility() == View.INVISIBLE)
                     btn_nextDay.setVisibility(View.VISIBLE);
                 c.add(c.DATE, -1);
                 date = df.format(c.getTime());
                 txt_date.setText(getJalaliDate(c.getTime()));
-                updatableRecord = recordDataSource.getRecord(activityId, date);
-                if(updatableRecord == null)
-                    isupdate = false;
-                List<Child> childrenList = checkSelectedChildren(updatableRecord);
+                updatebleRecord = recordDataSource.getRecord(activityId, date);
+                List<Child> childrenList = checkSelectedChildren(updatebleRecord);
                 childrenView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
             }
         });
@@ -85,20 +78,16 @@ public class RecordActivity extends android.app.Activity {
         btn_nextDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(adapter.isDataChanged){
-                    saveRecord();
-                    adapter.isDataChanged = false;
-                }
+                saveRecord();
+
                 TextView txt_date = (TextView)findViewById(R.id.txt_date);
                 c.add(c.DATE, +1);
                 date = df.format(c.getTime());
                 txt_date.setText(getJalaliDate(c.getTime()));
                 if(today.equals(c.getTime()))
                     btn_nextDay.setVisibility(View.INVISIBLE);
-                updatableRecord = recordDataSource.getRecord(activityId, date);
-                if(updatableRecord == null)
-                    isupdate = false;
-                List<Child> childrenList = checkSelectedChildren(updatableRecord);
+                updatebleRecord = recordDataSource.getRecord(activityId, date);
+                List<Child> childrenList = checkSelectedChildren(updatebleRecord);
                 childrenView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
             }
         });
@@ -111,6 +100,12 @@ public class RecordActivity extends android.app.Activity {
     }
 
     private void saveRecord() {
+        ChildrenAdapter adapter = (ChildrenAdapter)childrenView.getAdapter();
+        
+        if (!adapter.isDataChanged)
+            return;
+
+        adapter.isDataChanged = false;
         List<String> children = new ArrayList<String>();
         String childrenIds = "";
         for(int i= 0 ; i < childrenView.getCount(); i++){
@@ -123,16 +118,12 @@ public class RecordActivity extends android.app.Activity {
             }
         }
         Record record = new Record(activityId, childrenIds, children.size(), date);
-        if(isupdate == true){
-            record.id = updatableRecord.id;
+        if (updatebleRecord != null) {
+            record.id = updatebleRecord.id;
             recordDataSource.updateRecord(record);
-        }
-        else{
+        } else
             recordDataSource.addRecord(record);
-        }
     }
-
-
 
     @Override
     protected void onDestroy() {
@@ -144,21 +135,18 @@ public class RecordActivity extends android.app.Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(adapter.isDataChanged){
-            saveRecord();
-            adapter.isDataChanged = false;
-        }
+        saveRecord();
     }
 
-    private List<Child> checkSelectedChildren(Record newRecord){
+    private List<Child> checkSelectedChildren(Record record){
         List<Child> childrenList = childDataSource.getAllChildren();
-        if(newRecord != null){
-            isupdate = true;
+
+        if (record != null)
             for(Child child : childrenList){
-                if(newRecord.child_list.contains(Long.toString(child.id)))
+                if(record.child_list.contains(Long.toString(child.id)))
                     child.selected = true;
             }
-        }
+
         return childrenList;
     }
 }
