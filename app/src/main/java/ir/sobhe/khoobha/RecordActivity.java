@@ -2,10 +2,7 @@ package ir.sobhe.khoobha;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -40,7 +37,9 @@ public class RecordActivity extends android.app.Activity {
         recordDataSource.open();
 
         Intent intent = getIntent();
-        getActionBar().setTitle(intent.getStringExtra("activityTitle"));
+        if (android.os.Build.VERSION.SDK_INT >= 11)
+            getActionBar().setTitle(intent.getStringExtra("activityTitle"));
+
         activityId = intent.getLongExtra("activityId", 0);
         c = Calendar.getInstance();
         date = df.format(c.getTime());
@@ -101,7 +100,7 @@ public class RecordActivity extends android.app.Activity {
 
     private void saveRecord() {
         ChildrenAdapter adapter = (ChildrenAdapter)childrenView.getAdapter();
-        
+
         if (!adapter.isDataChanged)
             return;
 
