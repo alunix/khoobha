@@ -52,7 +52,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:paddingTop="5dp"
-        android:columnWidth="150px"
+        android:columnWidth="105dp"
         android:rotationY="180"
         android:gravity="center"
         android:numColumns="3"

@@ -9,17 +9,16 @@
 
     <ImageView
         android:id="@+id/childPicture"
-        android:layout_width="120px"
-        android:layout_height="160px"
+        android:layout_width="84dp"
+        android:layout_height="112dp"
         android:src="@android:color/holo_blue_dark">
     </ImageView>
 
     <TextView
         android:id="@+id/childName"
         android:layout_width="wrap_content"
-        android:layout_height="50px"
+        android:layout_height="32dp"
         android:text="محمد"
-        android:autoText="false"
         android:textColor="#fff"
         android:background="#000"
         android:layout_alignParentLeft="true"
@@ -28,9 +27,10 @@
         android:layout_alignRight="@+id/childPicture"
         android:layout_alignEnd="@+id/childPicture"
         android:alpha=".7"
-        android:textAlignment="center"
-        android:padding="10px"
-        android:textSize="20px">
+        android:paddingTop="4dp"
+        android:paddingRight="7dp"
+        android:paddingLeft="7dp"
+        android:textSize="14dp">
     </TextView>
 
     <Button

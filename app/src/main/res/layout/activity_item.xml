@@ -7,7 +7,6 @@
 
 
     <TextView
-        android:textAlignment="center"
         android:id="@+id/title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
