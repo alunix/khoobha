@@ -18,6 +18,7 @@
         android:id="@+id/childName"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:gravity="right"
         android:text="محمد"
         android:textColor="#fff"
         android:background="#000"
@@ -30,7 +31,7 @@
         android:paddingTop="4dp"
         android:paddingRight="7dp"
         android:paddingLeft="7dp"
-        android:textSize="14dp">
+        android:textSize="14sp">
     </TextView>
 
     <Button
