@@ -265,7 +265,10 @@ public class SyncService extends IntentService {
         urlConnection.setDoOutput(true);
         urlConnection.connect();
 
-        File file = new File(directory, filename);
+        File dir = new File(directory);
+        if(dir.exists() == false)
+            dir.mkdirs();
+        File file = new File(dir, filename);
         FileOutputStream fileOutput = new FileOutputStream(file);
         InputStream inputStream = urlConnection.getInputStream();
 
