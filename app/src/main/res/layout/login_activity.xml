@@ -37,6 +37,7 @@
                     android:layout_height="wrap_content"
                     android:hint="رایانامه"
                     android:inputType="textEmailAddress"
+                    android:textColor="#000"
                     android:maxLines="1"
                     android:singleLine="true"/>
 

@@ -12,6 +12,6 @@
         android:text="مجموعه"
         android:drawableRight="@drawable/abc_ic_ab_back_holo_light"
         android:padding="15dp"
-        android:textSize="16dp">
+        android:textSize="16sp">
     </TextView>
 </LinearLayout>

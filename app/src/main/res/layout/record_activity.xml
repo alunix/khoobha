@@ -20,7 +20,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignBaseline="@+id/txt_date"
             android:layout_toLeftOf="@+id/txt_date"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textColor="#fff"
             style="@style/Widget.AppCompat.ActionButton"/>
 
@@ -32,19 +32,20 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/txt_date"
             android:layout_alignBaseline="@+id/txt_date"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textColor="#fff"
             style="@style/Widget.AppCompat.ActionButton"/>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:text="پنجشنبه، ۵ تیر"
             android:id="@+id/txt_date"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            android:gravity="center_vertical|right" />
     </LinearLayout>
 
     <GridView
@@ -52,7 +53,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:paddingTop="5dp"
-        android:columnWidth="150px"
+        android:columnWidth="105dp"
         android:rotationY="180"
         android:gravity="center"
         android:numColumns="3"
