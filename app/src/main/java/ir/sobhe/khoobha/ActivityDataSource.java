@@ -18,7 +18,9 @@ public class ActivityDataSource {
 
     public SQLiteDatabase database;
     private DatabaseHelper dbHelper;
-    private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_TITLE, DatabaseHelper.COLUMN_POINTS};
+    private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_TITLE,
+                                    DatabaseHelper.COLUMN_POINTS, DatabaseHelper.COLUMN_CATEGORY_ID,
+                                    DatabaseHelper.COLUMN_SOLITARY};
     private SharedPreferences prefs;
 
     public ActivityDataSource(Context context){
@@ -40,6 +42,9 @@ public class ActivityDataSource {
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.COLUMN_TITLE, activity.title);
             values.put(DatabaseHelper.COLUMN_POINTS, activity.points);
+            if(activity.category_id >= 0)
+                values.put(DatabaseHelper.COLUMN_CATEGORY_ID, activity.category_id);
+            values.put(DatabaseHelper.COLUMN_SOLITARY, activity.solitary);
             activity.id = database.insert(DatabaseHelper.TABLE_ACTIVITY, null, values);
             Logger.log(database,DatabaseHelper.TABLE_ACTIVITY, Logger.OPERATIONS.INSERT,activity.id);
         }
@@ -70,6 +75,6 @@ public class ActivityDataSource {
     }
 
     private Activity cursorToActivity(Cursor cursor){
-        return new Activity(cursor.getLong(0),cursor.getString(1), cursor.getInt(2));
+        return new Activity(cursor.getLong(0),cursor.getString(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4)>0);
     }
 }

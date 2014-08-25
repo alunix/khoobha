@@ -4,17 +4,24 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.MediaStore;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.Buffer;
 import java.sql.SQLInput;
 
-/**
- * Created by hadi on 14/5/8 AD.
- */
+
 public class DatabaseHelper extends SQLiteOpenHelper {
+    private InputStream categoriesStream;
+    private InputStream activitiesStream;
     public static final String TABLE_CHILD = "child";
     public static final String TABLE_ACTIVITY = "activity";
     public static final String TABLE_RECORD = "record";
+    public static final String TABLE_CATEGORY = "category";
     public static final String TABLE_LOGS = "log";
     public static final String TABLE_GROUP = "`group`";
 
@@ -31,53 +38,71 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CREATED_AT = "created_at";
     public static final String COLUMN_OPERATION = "operation";
     public static final String COLUMN_IMAGE = "image";
+    public static final String COLUMN_CATEGORY_ID = "category_id";
+    public static final String COLUMN_SOLITARY = "solitary";
 
     private static final String DATABASE_NAME = "khoobha.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
-    private static final String CHILD_CREATE = ""
-            + "CREATE TABLE " + TABLE_CHILD + " ("
-            + COLUMN_ID + " integer NOT NULL PRIMARY KEY, "
-            + COLUMN_NAME + " varchar(100) null default null, "
-            + COLUMN_IMAGE + " varchar(100) null default null);";
+    private static final String CHILD_CREATE = ""+
+            "create table child ("+
+            "id integer not null primary key, "+
+            "name varchar(100) null default null, "+
+            "image varchar(100) null default null);";
 
-    private static final String ACTIVITY_CREATE = ""
-            + "create table " + TABLE_ACTIVITY + " ("
-            + COLUMN_ID + " integer NOT NULL PRIMARY KEY, "
-            + COLUMN_TITLE + " varchar(255) NOT NULL UNIQUE, "
-            + COLUMN_POINTS + " integer unsigned NOT NULL);";
+    private static final String ACTIVITY_CREATE = ""+
+            "create table activity ("+
+            "id integer not null primary key, "+
+            "title varchar(255) not null unique, "+
+            "points integer unsigned not null, "+
+            COLUMN_CATEGORY_ID + " integer null default null, "+
+            COLUMN_SOLITARY + " boolean not null default 0);";
 
-    private static final String RECORD_CREATE = ""
-            + "CREATE TABLE " + TABLE_RECORD + " ("
-            + COLUMN_ID + " integer NOT NULL PRIMARY KEY, "
-            + COLUMN_ACTIVITY_ID + " integer NOT NULL, "
-            + COLUMN_CHILD_LIST + " varchar(1000) NOT NULL, "
-            + COLUMN_ITEMS + " integer unsigned NOT NULL, "
-            + COLUMN_DATE + " varchar(10) NOT NULL);";
+    private static final String RECORD_CREATE = ""+
+            "create table record ("+
+            "id integer not null primary key, "+
+            "activity_id integer not null, "+
+            "child_list varchar(1000) not null, "+
+            "items integer unsigned not null, "+
+            "date varchar(10) not null);";
 
-    private static final String LOGS_CREATE = ""
-            + "CREATE TABLE log ("
-            + " table_name varchar(20) not null, "
-            + " operation varchar(10) not null, "
-            + " row_id integer not null, "
-            + " created_at timestamp default current_timestamp);";
+    private static final String CATEGORY_CREATE = ""+
+            "create table category ("+
+            "id integer not null primary key, "+
+            "title varchar(100) not null unique, "+
+            "image varchar(100) null default null);";
 
-    private static final String GROUP_CREATE = ""
-            + "CREATE TABLE "+ TABLE_GROUP +" (" +
-            "id integer null default null, " +
-            "title varchar(255) null default null, " +
-            "slug varchar(100) null default null, " +
-            "image varchar(50) null default null, " +
-            "version varchar(10) null default null, " +
-            "sent_at timestamp null default null, " +
-            "received_at timestamp null default null, " +
-            "assistant_email varchar(50) null default null, " +
-            "assistant_password varchar(50) null default null, " +
-            "options text null default null" +
-            ");";
+    private static final String LOGS_CREATE = ""+
+            "create table log ("+
+            "table_name varchar(20) not null, "+
+            "operation varchar(10) not null, "+
+            "row_id integer not null, "+
+            "created_at timestamp default current_timestamp);";
+
+    private static final String GROUP_CREATE = ""+
+            "create table `group` ("+
+            "id integer null default null, "+
+            "title varchar(255) null default null, "+
+            "slug varchar(100) null default null, "+
+            "image varchar(50) null default null, "+
+            "version varchar(10) null default null, "+
+            "sent_at timestamp null default null, "+
+            "received_at timestamp null default null, "+
+            "assistant_email varchar(50) null default null, "+
+            "assistant_password varchar(50) null default null, "+
+            "options text null default null);";
 
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        try{
+            categoriesStream = context.getResources().getAssets().open("categories.txt");
+            activitiesStream = context.getResources().getAssets().open("activities.txt");
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -86,24 +111,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(CHILD_CREATE);
             sqLiteDatabase.execSQL(ACTIVITY_CREATE);
             sqLiteDatabase.execSQL(RECORD_CREATE);
+            sqLiteDatabase.execSQL(CATEGORY_CREATE);
             sqLiteDatabase.execSQL(LOGS_CREATE);
             sqLiteDatabase.execSQL(GROUP_CREATE);
 
-            //add default activities
-            Activity[] activities = new Activity[5];
-            activities[0] = new Activity(3, "نماز مغرب", 1);
-            activities[1] = new Activity(5, "تکبیر", 1);
-            activities[2] = new Activity(6,"اذان", 1);
-            activities[3] = new Activity(12, "نماز ظهر", 1);
-            activities[4] = new Activity(13,"نماز صبح",3);
+            //Add default activities and categories
+            BufferedReader categoriesReader = new BufferedReader(new InputStreamReader(categoriesStream));
+            BufferedReader activitiesReader = new BufferedReader(new InputStreamReader(activitiesStream));
+            String categoriesString = "";
+            String activitiesString = "";
+            String currentLine = null;
 
-            for (Activity activity : activities) {
-                ContentValues values = new ContentValues();
-                values.put(COLUMN_ID, activity.id);
-                values.put(COLUMN_TITLE, activity.title);
-                values.put(COLUMN_POINTS, activity.points);
-                sqLiteDatabase.insert(TABLE_ACTIVITY, null, values);
-            }
+            while((currentLine = categoriesReader.readLine()) != null)
+                categoriesString += currentLine + "\n";
+            while ((currentLine = activitiesReader.readLine()) != null)
+                activitiesString += currentLine + "\n";
+
+            String categoriesSql = String.format("INSERT INTO category(id, title) VALUES %s", categoriesString);
+            sqLiteDatabase.execSQL(categoriesSql);
+
+            String activitiesSql = String.format("INSERT INTO activity(id, title, points, category_id) VALUES %s", activitiesString);
+            sqLiteDatabase.execSQL(activitiesSql);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,8 +140,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
-        if (i == 1 && i2 == 2) {
 
-        }
     }
 }
