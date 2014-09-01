@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MainActivity extends android.app.Activity {
 
-    private ActivityDataSource dataSource;
+    private CategoryDataSource dataSource;
     private MenuItem syncItem;
 
     private BroadcastReceiver reciever = new BroadcastReceiver() {
@@ -34,7 +34,6 @@ public class MainActivity extends android.app.Activity {
                 else if(result == SyncService.RESULT_ERROR)
                     Toast.makeText(MainActivity.this, "خطا در هنگام به روز رسانی", Toast.LENGTH_LONG).show();
             }
-
             setProgressBarIndeterminateVisibility(false);
             syncItem.setVisible(true);
         }
@@ -47,9 +46,8 @@ public class MainActivity extends android.app.Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main_activity);
 
-        dataSource = new ActivityDataSource(this);
+        dataSource = new CategoryDataSource(this);
         dataSource.open();
-
         setProgressBarIndeterminateVisibility(false);
     }
 
@@ -80,37 +78,31 @@ public class MainActivity extends android.app.Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        List<Activity> activities = new ArrayList<Activity>();
+        List<Category> categories = new ArrayList<Category>();
 
         try {
-            activities = dataSource.getAllActivities();
+            categories = dataSource.getAllCategories();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        // add new activity button
-        activities.add(new Activity("+ فعالیت جدید", 0));
-
-        ActivitiesAdapter adapter = new ActivitiesAdapter(this, activities.toArray(new Activity[activities.size()]));
+        CategoriesAdapter adapter = new CategoriesAdapter(this, categories.toArray(new Category[categories.size()]));
         final ListView listView = (ListView)findViewById(R.id.ActivitiesList);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Activity activity = ((Activity)listView.getItemAtPosition(position));
+                Category category = ((Category)listView.getItemAtPosition(position));
 
-                if (activity.id == -1) {
-                    // new activity
-                    startActivity(new Intent(MainActivity.this, AddActivityActivity.class));
-                } else {
-                    // activity record
-                    Intent recordIntent = new Intent(MainActivity.this, RecordActivity.class);
-                    recordIntent.putExtra("activityId", activity.id);
-                    recordIntent.putExtra("activityTitle", activity.title);
-                    startActivity(recordIntent);
-                }
+
+                // activity record
+                Intent recordIntent = new Intent(MainActivity.this,ActivitiesActivity.class);
+                recordIntent.putExtra("categoryId", category.id);
+                recordIntent.putExtra("categoryTitle", category.title);
+                startActivity(recordIntent);
+
             }
         });
     }

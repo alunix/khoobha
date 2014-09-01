@@ -35,7 +35,8 @@ public class AddActivityActivity extends android.app.Activity {
             Toast.makeText(AddActivityActivity.this, "لطفا عدد معتبری را به عنوان امتیاز فعالیت وارد کنید.",Toast.LENGTH_LONG).show();
             return;
         }
-        Activity activity = new Activity(title, points);
+        int category_id = getIntent().getIntExtra("categoryId", -1);
+        Activity activity = new Activity(title, points, category_id);
         dataSource.open();
         dataSource.addActivity(activity);
         dataSource.close();

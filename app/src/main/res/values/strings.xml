@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pref_previously_registered">false</string>
 
+    <string name="pref_previously_registered">false</string>
     <string name="app_name">خوب‌ها</string>
     <string name="title_activity_add">فعالیت جدید</string>
     <string name="title_activity_add_child">ثبت نام</string>
@@ -9,4 +9,8 @@
     <string name="title_activity_children_list">بچه‌ها</string>
     <string name="title_activity_login">ورود</string>
     <string name="title_activity_choose_group">مجموعه</string>
+    <string name="title_activity_activities">ActivitiesActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
 </resources>

@@ -9,8 +9,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        >
+        android:theme="@style/AppTheme" >
         <activity
             android:name="ir.sobhe.khoobha.MainActivity"
             android:label="@string/app_name" >
@@ -26,8 +25,8 @@
         </activity>
         <activity
             android:name="ir.sobhe.khoobha.AddChildActivity"
-            android:label="@string/title_activity_add_child"
-            android:configChanges="keyboardHidden|orientation|screenSize">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_add_child" >
         </activity>
         <activity
             android:name="ir.sobhe.khoobha.LoginActivity"
@@ -53,6 +52,10 @@
         <activity
             android:name="ir.sobhe.khoobha.ChooseGroupActivity"
             android:label="@string/title_activity_choose_group" >
+        </activity>
+        <activity
+            android:name="ir.sobhe.khoobha.ActivitiesActivity"
+            android:label="@string/title_activity_activities" >
         </activity>
     </application>
 

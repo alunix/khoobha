@@ -74,6 +74,20 @@ public class ActivityDataSource {
         return activities;
     }
 
+    public List<Activity> getCategoryActivities(long category_id)
+    {
+        List<Activity> activities = new ArrayList<Activity>();
+        Cursor cursor = database.query(DatabaseHelper.TABLE_ACTIVITY, allColumns,
+                "category_id = " + category_id, null, null, null, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            Activity activity = cursorToActivity(cursor);
+            activities.add(activity);
+            cursor.moveToNext();
+        }
+        return activities;
+    }
+
     private Activity cursorToActivity(Cursor cursor){
         return new Activity(cursor.getLong(0),cursor.getString(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4)>0);
     }

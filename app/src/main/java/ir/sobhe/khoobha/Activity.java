@@ -19,6 +19,14 @@ public class Activity {
         solitary = false;
     }
 
+    public Activity(String col_title, int col_points, int category){
+        id = -1;
+        title = col_title;
+        points = col_points;
+        category_id = category;
+        solitary = false;
+    }
+
     public Activity(long col_id, String col_title, int col_points, int category, boolean _solitary){
         id = col_id;
         title = col_title;

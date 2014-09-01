@@ -15,4 +15,9 @@ public class Category {
         image = _image;
     }
 
+    public Category(String _title)
+    {
+        title = _title;
+    }
+
 }
