@@ -96,13 +96,11 @@ public class MainActivity extends android.app.Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Category category = ((Category)listView.getItemAtPosition(position));
 
-
                 // activity record
-                Intent recordIntent = new Intent(MainActivity.this,ActivitiesActivity.class);
+                Intent recordIntent = new Intent(MainActivity.this, CategoryActivity.class);
                 recordIntent.putExtra("categoryId", category.id);
                 recordIntent.putExtra("categoryTitle", category.title);
                 startActivity(recordIntent);
-
             }
         });
     }

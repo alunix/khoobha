@@ -21,7 +21,7 @@
         </activity>
         <activity
             android:name="ir.sobhe.khoobha.AddActivityActivity"
-            android:label="@string/title_activity_add" >
+            android:label="@string/title_activity_add_activity" >
         </activity>
         <activity
             android:name="ir.sobhe.khoobha.AddChildActivity"
@@ -54,8 +54,8 @@
             android:label="@string/title_activity_choose_group" >
         </activity>
         <activity
-            android:name="ir.sobhe.khoobha.ActivitiesActivity"
-            android:label="@string/title_activity_activities" >
+            android:name="ir.sobhe.khoobha.CategoryActivity"
+            android:label="@string/title_activity_category" >
         </activity>
     </application>
 
