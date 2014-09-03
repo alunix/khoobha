@@ -224,8 +224,15 @@ public class SyncService extends IntentService {
         return cursor.isAfterLast();
     }
 
-    private void updateId(SQLiteDatabase database, String table, String oldId, String newId) {
-        database.execSQL("update `" + table + "` set id = " + newId + " where id = " + oldId);
+    private void updateId(SQLiteDatabase database, String table, String oldId, String newId) throws Exception {
+        try {
+            database.execSQL("update `" + table + "` set id = " + newId + " where id = " + oldId);
+        }
+        catch (Exception e){
+            updateId(database, table, newId, newId + "00000");
+            throw new Exception("New Id exists!");
+        }
+
         database.execSQL("update log set row_id = " + newId + " where table_name = '" + table + "' and row_id = " + oldId);
 
         if (table.equals(DatabaseHelper.TABLE_CHILD))
