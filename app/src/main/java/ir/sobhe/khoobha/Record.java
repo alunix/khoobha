@@ -2,9 +2,6 @@ package ir.sobhe.khoobha;
 
 import java.sql.Date;
 
-/**
- * Created by hadi on 14/5/8 AD.
- */
 public class Record {
 
     public long id;

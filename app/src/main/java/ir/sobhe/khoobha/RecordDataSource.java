@@ -13,9 +13,6 @@ import java.util.List;
 
 import javax.crypto.spec.DHGenParameterSpec;
 
-/**
- * Created by hadi on 14/5/8 AD.
- */
 public class RecordDataSource {
     private SQLiteDatabase database;
     private DatabaseHelper dbHelper;
@@ -76,6 +73,7 @@ public class RecordDataSource {
     public void addRecord(Record record){
         try{
             ContentValues values = new ContentValues();
+            values.put("id", DatabaseHelper.getNewId(database, "record"));
             values.put(DatabaseHelper.COLUMN_ACTIVITY_ID, record.activity_id);
             values.put(DatabaseHelper.COLUMN_CHILD_LIST, record.child_list);
             values.put(DatabaseHelper.COLUMN_ITEMS, record.items);

@@ -2,6 +2,7 @@ package ir.sobhe.khoobha;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.MediaStore;
@@ -141,5 +142,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
 
+    }
+
+    public static long getNewId(SQLiteDatabase db, String table) {
+        long id = 1;
+        Cursor cursor = db.rawQuery("select max(id) from "+ table +" where id < 10000", null);
+        if (cursor.moveToFirst())
+            id = cursor.getLong(0)+1;
+
+        cursor.close();
+        return id;
     }
 }

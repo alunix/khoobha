@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by hadi on 14/5/8 AD.
- */
 public class Child {
 
     public static final String DIR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Khoobha/";

@@ -6,14 +6,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by hadi on 14/5/8 AD.
- */
 public class ChildDataSource {
 
     private SQLiteDatabase database;
@@ -23,8 +19,6 @@ public class ChildDataSource {
 
     public ChildDataSource(Context context){
         dbHelper = new DatabaseHelper(context);
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
     }
 
     public void open() throws SQLException {
@@ -38,12 +32,13 @@ public class ChildDataSource {
     public void addChild(Child child){
         try{
             ContentValues values = new ContentValues();
+            values.put("id", DatabaseHelper.getNewId(database, "child"));
             values.put(DatabaseHelper.COLUMN_NAME, child.name);
             values.put(DatabaseHelper.COLUMN_IMAGE, child.imageName);
             child.id = database.insert(DatabaseHelper.TABLE_CHILD, null, values);
-            Logger.log(database,DatabaseHelper.TABLE_CHILD, Logger.OPERATIONS.INSERT,child.id);
+            Logger.log(database, DatabaseHelper.TABLE_CHILD, Logger.OPERATIONS.INSERT, child.id);
         }
-        catch (Exception e){
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
