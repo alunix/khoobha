@@ -56,8 +56,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "id integer not null primary key, "+
             "title varchar(255) not null unique, "+
             "points integer unsigned not null, "+
-            COLUMN_CATEGORY_ID + " integer null default null, "+
-            COLUMN_SOLITARY + " boolean not null default 0);";
+            "category_id integer null default null, "+
+            "solitary boolean not null default 0);";
 
     private static final String RECORD_CREATE = ""+
             "create table record ("+
@@ -95,12 +95,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        try{
+        try {
             categoriesStream = context.getResources().getAssets().open("categories.txt");
             activitiesStream = context.getResources().getAssets().open("activities.txt");
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             e.printStackTrace();
         }
 

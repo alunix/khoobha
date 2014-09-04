@@ -139,7 +139,7 @@ public class SyncService extends IntentService {
                     downloadChildImage(image);
                     values = object.getString("id") + ",'" + object.getString("name") + "','" + image + "'";
                 } else if (table.equals("activity"))
-                    values = object.getString("id") +",'"+ object.getString("title") +"',"+ object.getString("points");
+                    values = object.getString("id") +",'"+ object.getString("title") +"',"+ object.getString("points") +","+ object.optString("category_id", "1") +","+ object.optString("solitary", "0");
                 else if (table.equals("record"))
                     values = object.getString("id") +","+ object.getString("activity") +",'"+ object.getString("child_list") +"',"+ object.getString("items") +",'"+ object.getString("date") +"'";
                 else
@@ -186,6 +186,8 @@ public class SyncService extends IntentService {
                     args.add(new BasicNameValuePair("id", id));
                     args.add(new BasicNameValuePair("title", cursor2.getString(1)));
                     args.add(new BasicNameValuePair("points", cursor2.getString(2)));
+                    args.add(new BasicNameValuePair("category_id", cursor2.getString(3)));
+                    args.add(new BasicNameValuePair("solitary", cursor2.getString(4)));
                 } else if (table.equals(DatabaseHelper.TABLE_RECORD)) {
                     args.add(new BasicNameValuePair("activity", cursor2.getString(1)));
                     args.add(new BasicNameValuePair("child_list", cursor2.getString(2)));
