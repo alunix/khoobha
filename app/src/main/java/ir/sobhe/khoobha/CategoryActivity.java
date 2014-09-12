@@ -49,10 +49,24 @@ public class CategoryActivity extends android.app.Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Activity activity = ((Activity)listView.getItemAtPosition(position));
-                Intent recordIntent = new Intent(CategoryActivity.this, RecordActivity.class);
-                recordIntent.putExtra("activityId", activity.id);
-                recordIntent.putExtra("activityTitle", activity.title);
-                startActivity(recordIntent);
+                Intent recordIntent;
+                if(activity.solitary){
+                    try {
+                        recordIntent = new Intent(CategoryActivity.this,SolitaryRecordActivity.class);
+                        recordIntent.putExtra("activityId", activity.id);
+                        recordIntent.putExtra("activityTitle", activity.title);
+                        startActivity(recordIntent);
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    recordIntent = new Intent(CategoryActivity.this, RecordActivity.class);
+                    recordIntent.putExtra("activityId", activity.id);
+                    recordIntent.putExtra("activityTitle", activity.title);
+                    startActivity(recordIntent);
+                }
             }
         });
     }

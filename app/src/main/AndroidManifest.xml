@@ -41,6 +41,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
+        <activity
+            android:name=".SolitaryRecordActivity"
+            android:label="فعالیت"
+            android:parentActivityName=".CategoryActivity"
+            >
+        </activity>
 
         <service android:name="ir.sobhe.khoobha.SyncService" >
         </service>

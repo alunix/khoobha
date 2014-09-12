@@ -122,16 +122,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String activitiesString = "";
             String currentLine = null;
 
-            while((currentLine = categoriesReader.readLine()) != null)
-                categoriesString += currentLine + "\n";
-            while ((currentLine = activitiesReader.readLine()) != null)
-                activitiesString += currentLine + "\n";
+            while((currentLine = categoriesReader.readLine()) != null){
+                String categoriesSql = String.format("INSERT INTO category(id, title) VALUES %s", currentLine);
+                sqLiteDatabase.execSQL(categoriesSql);
+            }
+            while ((currentLine = activitiesReader.readLine()) != null){
+                String activitiesSql = String.format("INSERT INTO activity(id, title, points, category_id) VALUES %s", currentLine);
+                sqLiteDatabase.execSQL(activitiesSql);
+            }
 
-            String categoriesSql = String.format("INSERT INTO category(id, title) VALUES %s", categoriesString);
-            sqLiteDatabase.execSQL(categoriesSql);
 
-            String activitiesSql = String.format("INSERT INTO activity(id, title, points, category_id) VALUES %s", activitiesString);
-            sqLiteDatabase.execSQL(activitiesSql);
+            //String categoriesSql = String.format("INSERT INTO category(id, title) VALUES %s", categoriesString);
+            //sqLiteDatabase.execSQL(categoriesSql);
+
+            //String activitiesSql = String.format("INSERT INTO activity(id, title, points, category_id) VALUES %s", activitiesString);
+            //sqLiteDatabase.execSQL(activitiesSql);
 
         } catch (Exception e) {
             e.printStackTrace();

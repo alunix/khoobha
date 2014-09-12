@@ -20,9 +20,11 @@ public class ChildrenAdapter extends ArrayAdapter<Child> {
     private final Context context;
     private final Child[] values;
     public boolean isDataChanged = false;
+    public int layout;
 
-    public ChildrenAdapter(Context context, Child[] values){
-        super(context, R.layout.record_item, values);
+    public ChildrenAdapter(Context context, Child[] values, int layout_item){
+        super(context, layout_item, values);
+        layout = layout_item;
         this.context = context;
         this.values = values;
     }
@@ -34,29 +36,33 @@ public class ChildrenAdapter extends ArrayAdapter<Child> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View rowView = null;
         if(convertView == null){
             LayoutInflater inflater =  (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.record_item, parent, false);
+            rowView = inflater.inflate(layout, parent, false);
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.text = (TextView)rowView.findViewById(R.id.childName);
             viewHolder.image = (ImageView)rowView.findViewById(R.id.childPicture);
-            viewHolder.checkbox = (CheckBox)rowView.findViewById(R.id.check);
-            viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Child element = (Child)viewHolder.checkbox.getTag();
-                    if(!element.selected || !buttonView.isChecked())
-                        isDataChanged = true;
-                    element.selected = buttonView.isChecked();
-                }
-            });
+            if(layout == R.layout.record_item){
+                viewHolder.checkbox = (CheckBox)rowView.findViewById(R.id.check);
+                viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        Child element = (Child)viewHolder.checkbox.getTag();
+                        if(!element.selected || !buttonView.isChecked())
+                            isDataChanged = true;
+                        element.selected = buttonView.isChecked();
+                        viewHolder.checkbox.setTag(values[position]);
+                    }
+                });
+            }
+
             rowView.setTag(viewHolder);
-            viewHolder.checkbox.setTag(values[position]);
         }else{
             rowView = convertView;
-            ((ViewHolder)rowView.getTag()).checkbox.setTag(values[position]);
+            if(layout == R.layout.record_item)
+                ((ViewHolder)rowView.getTag()).checkbox.setTag(values[position]);
         }
 
         ViewHolder holder = (ViewHolder)rowView.getTag();
@@ -68,6 +74,7 @@ public class ChildrenAdapter extends ArrayAdapter<Child> {
         catch (Exception e){
             e.printStackTrace();
         }
+        if(layout == R.layout.record_item)
         holder.checkbox.setChecked(values[position].selected);
 
         return rowView;

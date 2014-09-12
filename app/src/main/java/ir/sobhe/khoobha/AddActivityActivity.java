@@ -3,6 +3,7 @@ package ir.sobhe.khoobha;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ public class AddActivityActivity extends android.app.Activity {
     private void saveActivity() {
         EditText txt_title = (EditText)findViewById(R.id.txt_title);
         String title = txt_title.getText().toString();
+        boolean isSolitary = ((CheckBox)findViewById(R.id.chk_solitary)).isChecked();
         int points = 0;
         if(title == null)
         {
@@ -37,6 +39,7 @@ public class AddActivityActivity extends android.app.Activity {
         }
         int category_id = getIntent().getIntExtra("categoryId", -1);
         Activity activity = new Activity(title, points, category_id);
+        activity.solitary = isSolitary;
         dataSource.open();
         dataSource.addActivity(activity);
         dataSource.close();

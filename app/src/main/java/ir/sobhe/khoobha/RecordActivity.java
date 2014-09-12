@@ -48,7 +48,7 @@ public class RecordActivity extends android.app.Activity {
         updatebleRecord = recordDataSource.getRecord(activityId, date);
         List<Child> childrenList = checkSelectedChildren(updatebleRecord);
         childrenView = (GridView)findViewById(R.id.childList);
-        childrenView.setAdapter(new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()])));
+        childrenView.setAdapter(new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()]), R.layout.record_item));
 
         TextView txt_date = (TextView)findViewById(R.id.txt_date);
         txt_date.setText(getJalaliDate(today));
@@ -70,7 +70,7 @@ public class RecordActivity extends android.app.Activity {
                 txt_date.setText(getJalaliDate(c.getTime()));
                 updatebleRecord = recordDataSource.getRecord(activityId, date);
                 List<Child> childrenList = checkSelectedChildren(updatebleRecord);
-                childrenView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
+                childrenView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()]), R.layout.record_item));
             }
         });
 
@@ -87,7 +87,7 @@ public class RecordActivity extends android.app.Activity {
                     btn_nextDay.setVisibility(View.INVISIBLE);
                 updatebleRecord = recordDataSource.getRecord(activityId, date);
                 List<Child> childrenList = checkSelectedChildren(updatebleRecord);
-                childrenView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()])));
+                childrenView.setAdapter(new ChildrenAdapter(RecordActivity.this, childrenList.toArray(new Child[childrenList.size()]), R.layout.record_item));
             }
         });
     }
