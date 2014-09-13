@@ -44,6 +44,7 @@ public class ChildrenAdapter extends ArrayAdapter<Child> {
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.text = (TextView)rowView.findViewById(R.id.childName);
             viewHolder.image = (ImageView)rowView.findViewById(R.id.childPicture);
+            rowView.setTag(viewHolder);
             if(layout == R.layout.record_item){
                 viewHolder.checkbox = (CheckBox)rowView.findViewById(R.id.check);
                 viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -53,12 +54,10 @@ public class ChildrenAdapter extends ArrayAdapter<Child> {
                         if(!element.selected || !buttonView.isChecked())
                             isDataChanged = true;
                         element.selected = buttonView.isChecked();
-                        viewHolder.checkbox.setTag(values[position]);
                     }
                 });
+                viewHolder.checkbox.setTag(values[position]);
             }
-
-            rowView.setTag(viewHolder);
         }else{
             rowView = convertView;
             if(layout == R.layout.record_item)

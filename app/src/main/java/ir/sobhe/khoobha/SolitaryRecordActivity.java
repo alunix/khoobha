@@ -40,7 +40,7 @@ public class SolitaryRecordActivity extends android.app.Activity {
         activityId = intent.getLongExtra("activityId", 0);
 
         List<Child> childrenList = childDataSource.getAllChildren();
-        childrenView = (GridView)findViewById(R.id.childList);
+        childrenView = (GridView)findViewById(R.id.solitaryChildList);
         childrenView.setAdapter(new ChildrenAdapter(this, childrenList.toArray(new Child[childrenList.size()]), R.layout.solitary_record_item));
         childrenView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
