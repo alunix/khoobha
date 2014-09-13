@@ -78,6 +78,31 @@ public class ChildDataSource {
         return children;
     }
 
+    public List<Child> getUnselectedChilds(long activity_id){
+        List<Child> children = new ArrayList<Child>();
+        String command = String.format(
+                "select * from child where id not in (select child_list from record where activity_id = %s)",
+                Long.toString(activity_id));
+
+        try {
+            Cursor cursor = database.rawQuery(command, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Child child = cursorToChild(cursor);
+                children.add(child);
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return children;
+    }
+
     public boolean updateChild(Child child){
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_ID, child.id);
