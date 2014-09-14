@@ -51,25 +51,4 @@
         android:autoText="false"
         android:clickable="false"
         android:text="1" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="فردی"
-        android:id="@+id/tv_solitary"
-        android:layout_below="@+id/tv_points"
-        android:layout_alignRight="@+id/activityTitle"
-        android:layout_alignEnd="@+id/activityTitle"
-        android:layout_marginTop="55dp" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/chk_solitary"
-        android:layout_below="@id/txt_points"
-        android:layout_alignRight="@id/txt_points"
-        android:layout_marginTop="55dp"/>
-
-
-
 </RelativeLayout>

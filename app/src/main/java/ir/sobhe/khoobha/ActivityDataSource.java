@@ -13,9 +13,7 @@ public class ActivityDataSource {
 
     public SQLiteDatabase database;
     private DatabaseHelper dbHelper;
-    private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_TITLE,
-                                    DatabaseHelper.COLUMN_POINTS, DatabaseHelper.COLUMN_CATEGORY_ID,
-                                    DatabaseHelper.COLUMN_SOLITARY};
+    private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_TITLE, DatabaseHelper.COLUMN_POINTS, DatabaseHelper.COLUMN_CATEGORY_ID};
 
     public ActivityDataSource(Context context){
         dbHelper = new DatabaseHelper(context);
@@ -37,7 +35,6 @@ public class ActivityDataSource {
             values.put(DatabaseHelper.COLUMN_POINTS, activity.points);
             if(activity.category_id >= 0)
                 values.put(DatabaseHelper.COLUMN_CATEGORY_ID, activity.category_id);
-            values.put(DatabaseHelper.COLUMN_SOLITARY, activity.solitary);
             activity.id = database.insert(DatabaseHelper.TABLE_ACTIVITY, null, values);
             Logger.log(database,DatabaseHelper.TABLE_ACTIVITY, Logger.OPERATIONS.INSERT, activity.id);
         }
@@ -67,21 +64,7 @@ public class ActivityDataSource {
         return activities;
     }
 
-    public List<Activity> getCategoryActivities(long category_id)
-    {
-        List<Activity> activities = new ArrayList<Activity>();
-        Cursor cursor = database.query(DatabaseHelper.TABLE_ACTIVITY, allColumns,
-                "category_id = " + category_id, null, null, null, null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
-            Activity activity = cursorToActivity(cursor);
-            activities.add(activity);
-            cursor.moveToNext();
-        }
-        return activities;
-    }
-
-    private Activity cursorToActivity(Cursor cursor){
-        return new Activity(cursor.getLong(0),cursor.getString(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4)>0);
+    public static Activity cursorToActivity(Cursor cursor){
+        return new Activity(cursor.getLong(0),cursor.getString(1), cursor.getInt(2), cursor.getInt(3));
     }
 }

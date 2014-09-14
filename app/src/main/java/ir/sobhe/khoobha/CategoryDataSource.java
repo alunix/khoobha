@@ -11,19 +11,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by hadi on 14/8/21 AD.
- */
 public class CategoryDataSource {
-    private SQLiteDatabase database;
-    private DatabaseHelper dbHelper;
-    private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_TITLE, DatabaseHelper.COLUMN_IMAGE};
-    private SharedPreferences prefs;
+    SQLiteDatabase database;
+    DatabaseHelper dbHelper;
+    String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_TITLE, DatabaseHelper.COLUMN_IMAGE, DatabaseHelper.COLUMN_SOLITARY};
 
-    public CategoryDataSource(Context context){
+    public CategoryDataSource(Context context) {
         dbHelper = new DatabaseHelper(context);
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
     }
 
     public void open() {
@@ -37,8 +31,7 @@ public class CategoryDataSource {
     public Category getCategory(long category_Id){
         Category ret = null;
 
-        Cursor cursor = database.query("category",
-                allColumns, "id = " + category_Id, null, null, null, null);
+        Cursor cursor = database.query("category", allColumns, "id = " + category_Id, null, null, null, null);
 
         cursor.moveToFirst();
         if (!cursor.isAfterLast())
@@ -66,15 +59,25 @@ public class CategoryDataSource {
         return categories;
     }
 
+    public List<Activity> getCategoryActivities(long category_id) {
+        List<Activity> activities = new ArrayList<Activity>();
+        Cursor cursor = database.rawQuery("select * from activity where category_id = " + category_id, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            Activity activity = ActivityDataSource.cursorToActivity(cursor);
+            activities.add(activity);
+            cursor.moveToNext();
+        }
+        return activities;
+    }
 
     private Category cursorToCategory(Cursor cursor){
         try{
-            return new Category(cursor.getInt(0),cursor.getString(1),cursor.getString(2));
+            return new Category(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3));
         }
-        catch (Exception e){
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
     }
 }

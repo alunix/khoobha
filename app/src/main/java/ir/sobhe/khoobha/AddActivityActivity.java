@@ -22,13 +22,14 @@ public class AddActivityActivity extends android.app.Activity {
     private void saveActivity() {
         EditText txt_title = (EditText)findViewById(R.id.txt_title);
         String title = txt_title.getText().toString();
-        boolean isSolitary = ((CheckBox)findViewById(R.id.chk_solitary)).isChecked();
+        int category_id = getIntent().getIntExtra("categoryId", -1);
         int points = 0;
-        if(title == null)
-        {
+
+        if(title == null) {
             Toast.makeText(AddActivityActivity.this, "لطفا عنوان فعالیت را تکمیل کنید",Toast.LENGTH_LONG).show();
             return;
         }
+
         EditText txt_points = (EditText)findViewById(R.id.txt_points);
         try {
             points = Integer.parseInt(txt_points.getText().toString());
@@ -37,11 +38,9 @@ public class AddActivityActivity extends android.app.Activity {
             Toast.makeText(AddActivityActivity.this, "لطفا عدد معتبری را به عنوان امتیاز فعالیت وارد کنید.",Toast.LENGTH_LONG).show();
             return;
         }
-        int category_id = getIntent().getIntExtra("categoryId", -1);
-        Activity activity = new Activity(title, points, category_id);
-        activity.solitary = isSolitary;
+
         dataSource.open();
-        dataSource.addActivity(activity);
+        dataSource.addActivity(new Activity(title, points, category_id));
         dataSource.close();
         AddActivityActivity.this.finish();
     }

@@ -13,20 +13,21 @@ import java.util.List;
 
 
 public class CategoryActivity extends android.app.Activity {
-    private ActivityDataSource dataSource;
-    private MenuItem addActivityItem;
-    private int category_id;
+    CategoryDataSource dataSource;
+    MenuItem addActivityItem;
+    Category category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        dataSource = new ActivityDataSource(this);
+        dataSource = new CategoryDataSource(this);
         dataSource.open();
 
-        Intent intent = getIntent();
+        category = dataSource.getCategory(getIntent().getIntExtra("categoryId", -1));
+
         if (android.os.Build.VERSION.SDK_INT >= 11)
-            getActionBar().setTitle(intent.getStringExtra("categoryTitle"));
+            getActionBar().setTitle(getIntent().getStringExtra("categoryTitle"));
     }
 
     @Override
@@ -34,9 +35,7 @@ public class CategoryActivity extends android.app.Activity {
         super.onResume();
         List<Activity> activities = new ArrayList<Activity>();
         try {
-            Intent intent = getIntent();
-            category_id = intent.getIntExtra("categoryId", -1);
-            activities = dataSource.getCategoryActivities(category_id);
+            activities = dataSource.getCategoryActivities(category.id);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -50,18 +49,17 @@ public class CategoryActivity extends android.app.Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Activity activity = ((Activity)listView.getItemAtPosition(position));
                 Intent recordIntent;
-                if(activity.solitary){
+                if(category.solitary){
                     try {
-                        recordIntent = new Intent(CategoryActivity.this,SolitaryRecordActivity.class);
+                        recordIntent = new Intent(CategoryActivity.this, SolitaryRecordActivity.class);
                         recordIntent.putExtra("activityId", activity.id);
                         recordIntent.putExtra("activityTitle", activity.title);
                         startActivity(recordIntent);
                     }
-                    catch (Exception e){
+                    catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                else{
+                } else {
                     recordIntent = new Intent(CategoryActivity.this, RecordActivity.class);
                     recordIntent.putExtra("activityId", activity.id);
                     recordIntent.putExtra("activityTitle", activity.title);
@@ -81,7 +79,7 @@ public class CategoryActivity extends android.app.Activity {
         switch (item.getItemId()) {
             case R.id.action_add:
                 Intent addActivityIntent = new Intent(CategoryActivity.this, AddActivityActivity.class);
-                addActivityIntent.putExtra("categoryId", category_id);
+                addActivityIntent.putExtra("categoryId", category.id);
                 startActivity(addActivityIntent);
                 return true;
             default:

@@ -56,8 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "id integer not null primary key, "+
             "title varchar(255) not null unique, "+
             "points integer unsigned not null, "+
-            "category_id integer null default null, "+
-            "solitary boolean not null default 0);";
+            "category_id integer null default null);";
 
     private static final String RECORD_CREATE = ""+
             "create table record ("+
@@ -71,7 +70,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "create table category ("+
             "id integer not null primary key, "+
             "title varchar(100) not null unique, "+
-            "image varchar(100) null default null);";
+            "image varchar(100) null default null, " +
+            "solitary boolean not null default 0);";
 
     private static final String LOGS_CREATE = ""+
             "create table log ("+
@@ -123,20 +123,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String currentLine = null;
 
             while((currentLine = categoriesReader.readLine()) != null){
-                String categoriesSql = String.format("INSERT INTO category(id, title) VALUES %s", currentLine);
+                String categoriesSql = String.format("INSERT INTO category(id, title, image, solitary) VALUES %s", currentLine);
                 sqLiteDatabase.execSQL(categoriesSql);
             }
             while ((currentLine = activitiesReader.readLine()) != null){
                 String activitiesSql = String.format("INSERT INTO activity(id, title, points, category_id) VALUES %s", currentLine);
                 sqLiteDatabase.execSQL(activitiesSql);
             }
-
-
-            //String categoriesSql = String.format("INSERT INTO category(id, title) VALUES %s", categoriesString);
-            //sqLiteDatabase.execSQL(categoriesSql);
-
-            //String activitiesSql = String.format("INSERT INTO activity(id, title, points, category_id) VALUES %s", activitiesString);
-            //sqLiteDatabase.execSQL(activitiesSql);
 
         } catch (Exception e) {
             e.printStackTrace();
