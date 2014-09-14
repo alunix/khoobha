@@ -6,13 +6,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class SolitaryRecordActivity extends android.app.Activity {
@@ -21,6 +18,7 @@ public class SolitaryRecordActivity extends android.app.Activity {
     private RecordDataSource recordDataSource;
     private long activityId;
     private GridView childrenView;
+    private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +44,7 @@ public class SolitaryRecordActivity extends android.app.Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Child child = (Child)adapterView.getItemAtPosition(i);
-                Record record = new Record(activityId,Long.toString(child.id), 1, Calendar.getInstance().getTime().toString());
+                Record record = new Record(activityId,Long.toString(child.id), 1, df.format(Calendar.getInstance().getTime()));
                 recordDataSource.addRecord(record);
                 finish();
             }
