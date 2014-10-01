@@ -12,7 +12,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -36,8 +35,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +99,7 @@ public class SyncService extends IntentService {
             HttpResponse response = (new DefaultHttpClient()).execute(new HttpGet(url));
             events = new JSONArray(EntityUtils.toString(response.getEntity()));
         } catch (Exception e) {
-            e.printStackTrace();
+            Sentry.captureException(e);
             serviceResult = RESULT_ERROR;
         }
 
@@ -150,7 +147,7 @@ public class SyncService extends IntentService {
                 created_at = event.getString("created_at");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Sentry.captureException(e);
         }
 
         if (!created_at.isEmpty())
@@ -209,7 +206,7 @@ public class SyncService extends IntentService {
                     if (table.equals("record"))
                         database.execSQL("update record set child_list='" + result.getString("child_list") + "', items="+ result.getString("items") +" where id = "+ result.getString("id"));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Sentry.captureException(e);
                     break;
                 }
             }

@@ -45,6 +45,7 @@ public class MainActivity extends android.app.Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.main_activity);
+        Sentry.init(this.getApplicationContext(), "https://c30734be625b456b9271b14cf89e8134:66a789b1290249f5b5c344bfeea96d58@app.getsentry.com/30975");
 
         dataSource = new CategoryDataSource(this);
         dataSource.open();
