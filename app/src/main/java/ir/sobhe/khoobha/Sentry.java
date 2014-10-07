@@ -169,19 +169,23 @@ public class Sentry {
     }
 
     public static void captureException(Throwable t) {
-        Sentry.captureException(t, SentryEventLevel.ERROR);
+        Sentry.captureException(t, SentryEventLevel.ERROR, new HashMap<String, String>());
     }
 
-    public static void captureException(Throwable t, SentryEventLevel level) {
+    public static void captureException(Throwable t, Map<String,String> tags) {
+        Sentry.captureException(t, SentryEventLevel.ERROR, tags);
+    }
+
+    public static void captureException(Throwable t, SentryEventLevel level, Map<String,String> tags) {
         String culprit = getCause(t, t.getMessage());
 
         Sentry.captureEvent(new SentryEventBuilder()
                         .setMessage(t.getMessage())
                         .setCulprit(culprit)
                         .setLevel(level)
+                        .setTags(tags)
                         .setException(t)
         );
-
     }
 
     public static void captureUncaughtException(Context context, Throwable t) {

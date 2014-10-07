@@ -37,6 +37,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -159,7 +160,7 @@ public class SyncService extends IntentService {
     private boolean sendData() {
         List<NameValuePair> args = new ArrayList<NameValuePair>();
         String table, id, operation, url = "", filename = "", last = "";
-        JSONObject result;
+        JSONObject result = new JSONObject();
 
         // read logs
         Cursor cursor2;
@@ -205,8 +206,12 @@ public class SyncService extends IntentService {
 
                     if (table.equals("record"))
                         database.execSQL("update record set child_list='" + result.getString("child_list") + "', items="+ result.getString("items") +" where id = "+ result.getString("id"));
+
                 } catch (Exception e) {
-                    Sentry.captureException(e);
+                    HashMap<String, String> tags = new HashMap<String, String>();
+                    tags.put("args", args.toString());
+                    tags.put("response", result.toString());
+                    Sentry.captureException(e, tags);
                     break;
                 }
             }
